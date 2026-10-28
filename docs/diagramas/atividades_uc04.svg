@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="1130" viewBox="0 0 1260 1130">
+<defs><marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 L2.5,5 z" fill="#000"/></marker><marker id="setaV" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M1,1 L9,5 L1,9" fill="none" stroke="#ff0000" stroke-width="1.3"/></marker></defs>
+<rect width="1260" height="1130" fill="#fff"/>
+<text x="630.0" y="32.0" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" dominant-baseline="central" fill="#000">Diagrama de Atividades - UC04: Buscar e Filtrar TCCs</text>
+<text x="330" y="84.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Usuário Leitor</text>
+<text x="640" y="84.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Sistema</text>
+<text x="1090" y="84.0" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Armazenamento de Arquivos</text>
+<text x="330" y="104.0" font-family="Helvetica, Arial, sans-serif" font-size="11" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">(Aluno Pesquisador, Professor ou Visitante)</text>
+<polyline points="629.0,130.0 330.0,130.0 330.0,163.0" fill="none" stroke="#ff0000" stroke-width="1" marker-end="url(#setaV)"/>
+<polyline points="405.0,185.0 640.0,185.0 640.0,283.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="560.0,305.0 410.0,305.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="330.0,331.0 330.0,363.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="405.0,385.0 555.0,385.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="640.0,411.0 640.0,445.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="640.0,515.0 640.0,551.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<text x="658" y="532.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">no</text>
+<polyline points="555.0,580.0 190.0,580.0 190.0,305.0 250.0,305.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="705.0,480.0 805.0,480.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<text x="735" y="470.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">yes</text>
+<polyline points="880.0,502.0 880.0,625.0 330.0,625.0 330.0,648.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="405.0,670.0 640.0,670.0 640.0,714.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="555.0,740.0 405.0,740.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="330.0,762.0 330.0,820.0 560.0,820.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="720.0,820.0 1010.0,820.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="1090.0,842.0 1090.0,872.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="1020.0,910.0 725.0,910.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<text x="990" y="900.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">no</text>
+<polyline points="555.0,910.0 215.0,910.0 215.0,740.0 255.0,740.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<polyline points="1090.0,948.0 1090.0,1000.0 725.0,1000.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<text x="1108" y="965.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">yes</text>
+<polyline points="640.0,1022.0 640.0,1062.0" fill="none" stroke="#000" stroke-width="1" marker-end="url(#seta)"/>
+<circle cx="640" cy="130" r="11.0" fill="#000" stroke="#ff0000" stroke-width="1"/>
+<rect x="255.0" y="163.0" width="150" height="44" rx="14" fill="#ffe6cc" stroke="#d79b00"/>
+<text x="330" y="177.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Selecionar a opção</text><text x="330" y="192.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">"Buscar TCC"</text>
+<rect x="560.0" y="283.0" width="160" height="44" rx="14" fill="#ffffc0" stroke="#ff0000"/>
+<text x="640" y="297.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Exibir barra de pesquisa</text><text x="640" y="312.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">e botões de filtro</text>
+<rect x="250.0" y="279.0" width="160" height="52" rx="14" fill="#ffe6cc" stroke="#d79b00"/>
+<text x="330" y="290.6" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Inserir termos e/ou</text><text x="330" y="305.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">selecionar filtros (Ano,</text><text x="330" y="319.4" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Autor, Orientador, Tags)</text>
+<rect x="255.0" y="363.0" width="150" height="44" rx="14" fill="#ffe6cc" stroke="#d79b00"/>
+<text x="330" y="377.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Clicar em</text><text x="330" y="392.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">"Pesquisar"</text>
+<rect x="555.0" y="359.0" width="170" height="52" rx="14" fill="#ffffc0" stroke="#ff0000"/>
+<text x="640" y="370.6" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Aplicar todos os filtros</text><text x="640" y="385.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">simultaneamente (somente</text><text x="640" y="399.4" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">TCCs PUBLICADOS)</text>
+<polygon points="640,445.0 705.0,480 640,515.0 575.0,480" fill="#ffffc0" stroke="#ff0000"/>
+<text x="640" y="472.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Há trabalhos</text><text x="640" y="487.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">compatíveis?</text>
+<rect x="555.0" y="551.0" width="170" height="58" rx="14" fill="#ffffc0" stroke="#ff0000"/>
+<text x="640" y="565.6" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Sistema exibe "Nenhum</text><text x="640" y="580.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">trabalho encontrado para os</text><text x="640" y="594.4" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">critérios informados"</text>
+<rect x="805.0" y="458.0" width="150" height="44" rx="14" fill="#ffffc0" stroke="#ff0000"/>
+<text x="880" y="472.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Exibir resultados</text><text x="880" y="487.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">em forma de feed</text>
+<rect x="255.0" y="648.0" width="150" height="44" rx="14" fill="#ffe6cc" stroke="#d79b00"/>
+<text x="330" y="662.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Selecionar o trabalho</text><text x="330" y="677.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">listado desejado</text>
+<rect x="555.0" y="714.0" width="170" height="52" rx="14" fill="#ffffc0" stroke="#ff0000"/>
+<text x="640" y="725.6" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Exibir detalhes do TCC</text><text x="640" y="740.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">(resumo, imagens, tags e</text><text x="640" y="754.4" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">trabalhos conexos)</text>
+<rect x="255.0" y="718.0" width="150" height="44" rx="14" fill="#ffe6cc" stroke="#d79b00"/>
+<text x="330" y="732.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Clicar em</text><text x="330" y="747.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">"Baixar Artigo"</text>
+<rect x="560.0" y="798.0" width="160" height="44" rx="14" fill="#ffffc0" stroke="#ff0000"/>
+<text x="640" y="812.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Requisitar arquivo</text><text x="640" y="827.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">do TCC</text>
+<rect x="1010.0" y="798.0" width="160" height="44" rx="14" fill="#ccccff" stroke="#ff0000"/>
+<text x="1090" y="812.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Transferir arquivo</text><text x="1090" y="827.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">(DOCX, PDF ou EPUB)</text>
+<polygon points="1090,872.0 1160.0,910 1090,948.0 1020.0,910" fill="#ccccff" stroke="#ff0000"/>
+<text x="1090" y="902.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Transferência</text><text x="1090" y="917.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">concluída?</text>
+<rect x="555.0" y="881.0" width="170" height="58" rx="14" fill="#ffffc0" stroke="#ff0000"/>
+<text x="640" y="895.6" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Sistema exibe "Ocorreu um</text><text x="640" y="910.0" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">erro durante o download,</text><text x="640" y="924.4" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">verifique a sua conexão"</text>
+<rect x="555.0" y="978.0" width="170" height="44" rx="14" fill="#ffffc0" stroke="#ff0000"/>
+<text x="640" y="992.8" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">Salvar arquivo no</text><text x="640" y="1007.2" font-family="Helvetica, Arial, sans-serif" font-size="12" font-weight="normal" text-anchor="middle" dominant-baseline="central" fill="#000">dispositivo do usuário</text>
+<circle cx="640" cy="1075" r="13.0" fill="#fff" stroke="#ff0000" stroke-width="1.5"/><circle cx="640" cy="1075" r="8.5" fill="#000"/>
+</svg>
