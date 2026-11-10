@@ -1,0 +1,13 @@
+{
+  "name": "buscar-filtrar-tccs",
+  "version": "1.0.0",
+  "description": "UC04 - Buscar e Filtrar TCCs (RF#02), experimento de Spec-Driven Development",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

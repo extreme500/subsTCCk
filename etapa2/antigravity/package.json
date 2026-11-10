@@ -1,0 +1,13 @@
+{
+  "name": "buscar-filtrar-tccs",
+  "version": "1.0.0",
+  "description": "RF#02 / UC04 - Buscar e Filtrar TCCs (SDD)",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
+

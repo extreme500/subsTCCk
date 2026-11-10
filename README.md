@@ -54,3 +54,26 @@ docs/diagramas/      diagrama de atividades do UC04 (.drawio editável, .png e .
 ```
 
 O relatório está em `Desafio Engenharia Software.docx` (versão do grupo) e `Desafio Engenharia Software (revisado).docx` (com as revisões da etapa 1).
+
+## Etapa 2: SDD e GenAI
+
+A pasta `etapa2/` contém o experimento de Spec-Driven Development aplicado ao RF#02 / UC04 (Buscar e Filtrar TCCs) com duas ferramentas de IA:
+
+| Caminho | Conteúdo |
+|---|---|
+| `etapa2/relatorio/` | Rascunho do relatório da Etapa 2 (.docx) e a figura de arquitetura |
+| `etapa2/pacote-entrada/` | Pacote igual entregue às duas ferramentas (constituição, modelos, relatório e diagramas da Etapa 1) |
+| `etapa2/prompts-sdd.md` | Os seis prompts (Specify, Clarify, Plan, Tasks, Implement, Analyze) |
+| `etapa2/decisoes-clarify.md` | Decisões do grupo e respostas dadas a cada ferramenta |
+| `etapa2/registro-experimentos.md` | Registro completo dos experimentos |
+| `etapa2/claude-code/`, `etapa2/antigravity/` | Saída de cada ferramenta: spec, plano, tarefas, análise, código e testes |
+| `etapa2/oraculo/` | 17 testes independentes, rodados nas duas implementações |
+
+Requer Node.js 20 ou superior, sem `npm install`:
+
+```bash
+cd etapa2/claude-code && node --test          # 53 testes
+cd etapa2/antigravity && node --test          # 12 testes
+cd etapa2 && IMPL=claude node --test oraculo/       # 16 de 17
+cd etapa2 && IMPL=antigravity node --test oraculo/  # 13 de 17
+```
