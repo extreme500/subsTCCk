@@ -98,3 +98,29 @@ Depois das seis fases, o experimentador escreveu 17 testes de caixa-preta (`orac
 | Alucinações | Nenhuma identificada nos artefatos | Nenhuma identificada nos artefatos |
 | Erros | A04 (mensagem de conexão para arquivo ausente); A06 (termo curto casa trechos de palavras) | Termo curto casa trechos de palavras; ano inválido ignorado em silêncio; sem tratar acentos, "deteccao" não encontra "Detecção" |
 | Boas sugestões | Coleção como dado novo a coletar no UC01 (A01); diferenciar "arquivo ausente" de "falha de conexão" (A04); limitar o termo a palavras inteiras (A06) | Separar a mensagem de "TCC sem arquivo" da mensagem de falha (FR-009); unificar o texto das mensagens entre o diagrama de atividades e o UC04; oferecer a ordenação por recência como opção |
+
+## Experimento de testes funcionais: classes de equivalência e valor limite (UC01 e UC04)
+
+**Artefato/contexto fornecido (igual para as duas ferramentas):** a pasta `testes-funcionais/pacote-entrada/` (relatório da Etapa 1 com UC01, UC04 e CT01 a CT06, diagramas e transcrição).
+
+**Estratégia de interação:** uma conversa por ferramenta, com dois prompts (`testes-funcionais/prompts-testes.md`): o prompt 1 é simples; o prompt 2 é refinado (estrutura, critério de cobertura e proibição de inventar regras). O objetivo é responder também se refinar o prompt melhora o resultado.
+
+### Ferramenta A: Claude Code
+
+- **Modelo:** Claude Opus 5.5, agente com contexto limpo, restrito à pasta `testes-funcionais/claude-code/`
+- **Execução:** 12/11/2026
+
+| Prompt | Duração | Intervenções | Resultado |
+|---|---|---|---|
+| 1 (simples) | ~7 min | 0 | `testes-funcionais-v1.md`: 26 casos novos (CT07 a CT32), 74 classes (40 válidas, 17 inválidas, 17 indefinidas), 22 lacunas |
+| 2 (refinado) | ~6 min | 0 | `testes-funcionais-v2.md`: 24 casos novos (CT07 a CT30), 59 classes (38 válidas, 21 inválidas), limites, matriz de cobertura, 25 lacunas com perguntas e comparação com a v1 |
+
+O que o refinamento mudou: inferências viraram lacunas; cada caso inválido passou a cobrir uma só classe inválida; buscas sem resultado passaram a ser classes inválidas, como no CT05. Por excesso de rigor, a v2 descartou alguns casos úteis da v1, como o domínio parecido com o do LUME.
+
+### Ferramenta B: Antigravity
+
+[PENDENTE: executar os dois prompts e anotar aqui o horário de início e de fim de cada um.]
+
+### Consolidação
+
+A seção 7 do relatório usa a v2 do Claude como base. As lacunas foram decididas pelo grupo, quase todas pelo comportamento do protótipo ou pelas decisões do Clarify, e as classes e os casos derivados dessas decisões foram acrescentados (CT31 a CT40). Os casos de lógica foram automatizados em `tests/testes-funcionais.test.js`, na raiz do repositório: 28 testes, 26 aprovados e 2 registrados como divergência do protótipo (lista de semestres sem 2026/2; termo "IA" encontrando "anomalias").
