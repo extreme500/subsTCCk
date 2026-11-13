@@ -78,7 +78,11 @@ describe('UC01 Cadastrar TCC: valores limite', () => {
     assert.equal(errosCom({ anoSemestre: SEMESTRES.at(-1) }).anoSemestre, undefined);
     assert.equal(errosCom({ anoSemestre: SEMESTRES[0] }).anoSemestre, undefined);
   });
-  test('Ano/Semestre: o semestre atual (2026/2) deveria estar na lista', { todo: 'divergência: a lista do protótipo termina em 2026/1' }, () => {
+  test('CT41 (CI29): nenhum semestre posterior ao atual (2026/2) pode ser escolhido', () => {
+    const posteriores = SEMESTRES.filter((s) => { const [a, sem] = s.split('/').map(Number); return a * 10 + sem > 2026 * 10 + 2; });
+    assert.deepEqual(posteriores, []);
+  });
+  test('CT41 (valor limite): o semestre atual (2026/2) deveria estar na lista', { todo: 'divergência: a lista do protótipo termina em 2026/1' }, () => {
     assert.ok(SEMESTRES.includes('2026/2'));
   });
 });

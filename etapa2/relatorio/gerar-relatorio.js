@@ -92,7 +92,7 @@ function construir() {
     new Paragraph({ spacing: { after: 0, line: 240 }, children: [new TextRun({ text: 'Entrega 2: protótipo, arquitetura, SDD e GenAI, comparação, decisões e reflexão', font: TNR, size: 24 })] }),
     new Paragraph({ spacing: { after: 0, line: 240 }, children: [new TextRun({ text: 'Andriele Joras dos Santos (594861), Gabriel Pieruccini Knopp (594975), Vitor Feijó (588403)', font: TNR, size: 24 })] }),
     new Paragraph({ spacing: { after: 160, line: 240 }, children: [new TextRun({ text: 'Profª Leticia Santos Machado', font: TNR, size: 24 })] }),
-    P('**Nota para o grupo (apagar antes de entregar):** os trechos em amarelo marcados [GRUPO: ...] precisam ser respondidos ou confirmados por vocês, porque são opinião ou fato que só vocês sabem; os marcados [PENDENTE: ...] serão preenchidos depois da execução no Antigravity.'),
+    P('**Nota para o grupo (apagar antes de entregar):** os trechos em amarelo marcados [GRUPO: ...] precisam ser respondidos ou confirmados por vocês, porque são opinião ou fato que só vocês sabem.'),
   );
 
   // 1. Escopo
@@ -260,7 +260,7 @@ function construir() {
       ['Revisão', 'Relatório da Etapa 1', 'Claude Code (5)', 'Apontar inconsistências entre requisitos, casos de uso, diagramas e testes', 'Alta: os problemas apontados viraram correções'],
       ['Design UX', 'Protótipo de alta fidelidade', 'Claude Code (5)', 'Gerar o protótipo React a partir das especificações', 'Alta em velocidade; [GRUPO: avaliar a qualidade]'],
       ['Implementação (SDD)', 'Especificação, plano, tarefas, código e testes do UC04', 'Claude Code e Antigravity (6, 7)', 'Executar as seis fases do SDD', 'Alta para achar ambiguidades; o código gerado precisou de verificação independente'],
-      ['Testes', 'Classes de equivalência e valor limite', 'Claude Code e Antigravity (8, 9)', 'Ampliar os CTs com os critérios funcionais', 'Claude: alta; as lacunas apontadas viraram decisões, e os testes acharam 2 falhas do protótipo. [PENDENTE: Antigravity]'],
+      ['Testes', 'Classes de equivalência e valor limite', 'Claude Code e Antigravity (8, 9)', 'Ampliar os CTs com os critérios funcionais', 'Claude: alta; as lacunas apontadas viraram decisões, e os testes acharam 2 falhas do protótipo. Gemini: baixa com o prompt simples (dados inventados); aproveitável com o refinado'],
       ['Verificação', 'Testes independentes e comparação', 'Claude Code (10)', 'Escrever testes de caixa-preta a partir das decisões do grupo e comparar as saídas', 'Mostrou diferenças que os testes das próprias IAs escondiam'],
       ['Arquitetura e documentação', 'Seção de arquitetura e rascunho deste relatório', 'Claude Code (10)', 'Redigir a partir dos diagramas, do protótipo e dos dados dos experimentos', '[GRUPO: avaliar após a revisão]'],
     ], [1.3, 2.1, 1.6, 2.6, 2.4]),
@@ -390,7 +390,8 @@ function construir() {
       ['Ambas: inconsistências no material da Etapa 1', 'Aceitas e conferidas uma a uma', 'Seção 10.'],
       ['Claude (testes funcionais): versão refinada, com 25 lacunas', 'Aceita como base; lacunas decididas pelo grupo; 10 casos acrescentados (CT31 a CT40)', 'As lacunas eram decisões que a Etapa 1 não tinha tomado; quase todas foram resolvidas pelo comportamento do protótipo ou pelo Clarify (Tabela {T:lacunas}).'],
       ['Claude (testes funcionais): retirar o teste de domínio parecido com o do LUME', 'Rejeitada: o caso voltou como exemplo da classe CI05', 'É um engano realista do usuário e cabe na classe "outro domínio".'],
-      ['Antigravity (testes funcionais)', '[PENDENTE]', '[PENDENTE]'],
+      ['Antigravity (testes funcionais): classe "semestre posterior ao atual"', 'Aceita, com o ano corrente corrigido de 2025 para 2026/2 (CI29, CT41)', 'É consequência direta da pré-condição "TCC já defendido", e o Claude a tinha deixado como lacuna.'],
+      ['Antigravity (testes funcionais, prompt simples): base de teste e casos CT12 e CT20', 'Rejeitados', 'Contradiziam a tabela do CT03 (semestre e tags dos TCCs, autor e orientador do rascunho) e usavam regras que o relatório não define.'],
     ], [3.2, 2.8, 4]),
     FONTE('Fonte: decisoes-clarify.md e registro-experimentos.md.'),
     P('**Observação sobre a coleção.** A mesma dúvida recebeu respostas diferentes nas duas ferramentas. O Claude perguntou "o que é Coleção?" e recomendou a área temática. O Gemini perguntou se o texto ou os diagramas deveriam prevalecer e recomendou os diagramas, citando a constituição.'),
@@ -431,10 +432,11 @@ function construir() {
   // 11. Reflexão e conclusão
   add(
     H1('11. Reflexão e conclusão'),
-    P('O grupo tira cinco lições dos experimentos.'),
+    P('O grupo tira seis lições dos experimentos.'),
     P('**As decisões continuam humanas, e a forma da pergunta pesa.** A IA produziu em menos de uma hora o que levaria dias, mas as escolhas que mudaram o comportamento do sistema (coleção, acentos, ordenação, TCC sem arquivo) vieram das respostas do grupo no Clarify. Como a mesma dúvida, perguntada de outro jeito, levou a outra resposta, registrar e revisar as decisões faz parte do processo.'),
     P('**Passar nos próprios testes não basta.** As duas IAs entregaram todos os testes aprovados, mas os testes eram delas. Só a verificação independente mostrou as diferenças: testes escritos a partir dos critérios do grupo e a lista de problemas conhecidos.'),
     P('**A autoavaliação da IA varia.** Uma ferramenta apontou as próprias falhas; a outra declarou conformidade total sem tê-la. A fase Analyze serve como lista do que conferir, não como veredito.'),
+    P('**Refinar o prompt compensa, sobretudo na ferramenta mais fraca.** Nos testes funcionais, o prompt refinado transformou uma saída descartável do Gemini, com dados de teste inventados, numa saída aproveitável. No Claude, o ganho foi menor, porque a primeira versão já era cuidadosa. Escrever bem o pedido (estrutura, critério de cobertura, proibição de inventar) é parte do trabalho de engenharia.'),
     P('**SDD também revisa o que já existe.** O maior ganho imediato foi a auditoria do material da Etapa 1: a especificação obriga a ler requisitos e diagramas juntos, e as contradições aparecem.'),
     P('**O gargalo muda de lugar.** Escrever deixa de ser o trabalho principal; ler, decidir e verificar passam a ser. Isso exige do grupo mais entendimento do domínio, e não menos. É o que resume a frase do enunciado: "A IA pode produzir artefatos. O grupo precisa produzir entendimento, decisões e evidências."'),
     P('**O que descobrimos durante o processo que não sabíamos quando começamos?** [GRUPO: responder com as palavras de vocês. Sugestão para editar: "Descobrimos que a nossa própria especificação tinha lacunas que só apareceram quando uma IA tentou implementá-la. A mais clara foi a coleção, que estava nos requisitos e nos casos de uso mas em nenhum diagrama. Descobrimos também que a IA não só responde às nossas perguntas: ela escolhe quais perguntas fazer, e com isso influencia as nossas decisões."]'),

@@ -119,8 +119,32 @@ O que o refinamento mudou: inferências viraram lacunas; cada caso inválido pas
 
 ### Ferramenta B: Antigravity
 
-[PENDENTE: executar os dois prompts e anotar aqui o horário de início e de fim de cada um.]
+- **Modelo:** Gemini 4 Argon (High), mesma configuração do experimento de SDD (horários tirados do histórico local da conversa)
+- **Execução:** 13/11/2026
+
+| Prompt | Início | Fim | Duração | Intervenções | Resultado |
+|---|---|---|---|---|---|
+| 1 (simples) | 00:37 | 00:44 | ~6,5 min | 0 | `testes-funcionais-v1.md`: diagnóstico dos CT01 a CT06; 15 casos novos (CT07 a CT21); 65 classes (36 válidas, 29 inválidas); 13 lacunas |
+| 2 (refinado) | 01:51 | 01:58 | ~7 min | 0 | `testes-funcionais-v2.md`: 20 casos novos (CT07 a CT26); 54 classes (32 válidas, 22 inválidas); 30 valores limite; matriz de cobertura; 12 lacunas com perguntas; comparação com a v1 |
+
+Problemas encontrados:
+
+- **Versão 1, alucinação:** a base de teste contradiz a tabela do CT03 (D em 2025/2, C com a tag "Segurança", autor "Bruno Silva" e orientador "Profº João Vaz" inventados para o rascunho E). Por isso os resultados esperados do CT20 estão errados.
+- **Versão 1, regras inventadas e casos misturados:** inventou regras (semestre 0 e 3, três professores) e juntou várias classes inválidas no mesmo caso.
+- **Versão 2, ano corrente errado:** corrigiu os dois problemas acima, mas assumiu 2025 como ano corrente. Pelo CT13 dela, um TCC de 2026/1 seria recusado.
+- **Versão 2, cobertura:** não testa um segundo arquivo do trabalho. Registra "Coleções" como lacuna e, ao mesmo tempo, cria um caso para ela.
+
+O que entrou na consolidação: a classe "semestre posterior ao atual" (CI29, caso CT41), com o ano corrigido para 2026/2.
 
 ### Consolidação
 
-A seção 7 do relatório usa a v2 do Claude como base. As lacunas foram decididas pelo grupo, quase todas pelo comportamento do protótipo ou pelas decisões do Clarify, e as classes e os casos derivados dessas decisões foram acrescentados (CT31 a CT40). Os casos de lógica foram automatizados em `tests/testes-funcionais.test.js`, na raiz do repositório: 28 testes, 26 aprovados e 2 registrados como divergência do protótipo (lista de semestres sem 2026/2; termo "IA" encontrando "anomalias").
+A seção 7 do relatório usa a v2 do Claude como base. As lacunas foram decididas pelo grupo, quase todas pelo comportamento do protótipo ou pelas decisões do Clarify, e as classes e os casos derivados dessas decisões foram acrescentados (CT31 a CT40), além do CT41, que veio do Antigravity. Os casos de lógica foram automatizados em `tests/testes-funcionais.test.js`, na raiz do repositório: 29 testes, 27 aprovados e 2 registrados como divergência do protótipo (lista de semestres sem 2026/2; termo "IA" encontrando "anomalias").
+
+### Comparação
+
+| | Claude Code | Antigravity |
+|---|---|---|
+| Prompt 1 | 26 casos, 74 classes, 22 lacunas; deduções marcadas como inferência | 15 casos, 65 classes, 13 lacunas; base de teste inventada e regras deduzidas |
+| Prompt 2 | 24 casos, 59 classes, 25 lacunas | 20 casos, 54 classes, 12 lacunas; ano corrente errado (2025) |
+| Efeito do refinamento | Mais rigor, mesmo volume | Corrigiu os dados inventados; passou de descartável a aproveitável |
+| Aproveitado na consolidação | Base da seção 7 (CT07 a CT30 e as 25 lacunas) | Classe CI29 e caso CT41 |
