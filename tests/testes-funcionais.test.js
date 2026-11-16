@@ -97,6 +97,36 @@ describe('UC04 Buscar e Filtrar TCCs: classes de equivalência', () => {
     assert.ok(!r.some((t) => t.status !== 'PUBLICADO'));
     for (let i = 1; i < r.length; i++) assert.ok(r[i - 1].ano * 10 + r[i - 1].semestre >= r[i].ano * 10 + r[i].semestre);
   });
+  test('CT42 (parecer: cada filtro sozinho): todo resultado atende ao critério e é publicado', () => {
+    const sem = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    const casos = [
+      [{ ano: 2024 }, (t) => t.ano === 2024],
+      [{ autor: 'Castro' }, (t) => sem(t.autor).includes('castro')],
+      [{ orientador: 'Profª Ana Reis' }, (t) => t.orientador === 'Profª Ana Reis'],
+      [{ colecao: 'Ciência da Computação' }, (t) => t.colecao === 'Ciência da Computação'],
+      [{ tags: ['Segurança'] }, (t) => t.tags.includes('Segurança')],
+      [{ termo: 'redes' }, (t) => sem([t.titulo, t.resumo, t.autor, t.orientador, t.coorientador, ...t.tags].join(' ')).includes('redes')],
+    ];
+    for (const [filtro, atende] of casos) {
+      const r = buscar(tccs, filtro);
+      const esperado = tccs.filter((t) => t.status === 'PUBLICADO' && atende(t));
+      assert.ok(r.length > 0, JSON.stringify(filtro));
+      assert.deepEqual(r.map((t) => t.id).sort(), esperado.map((t) => t.id).sort(), JSON.stringify(filtro));
+    }
+  });
+  test('CT43 (parecer: combinações de filtros): cada combinação devolve a interseção dos filtros isolados', () => {
+    const combinacoes = [
+      [{ ano: 2025 }, { tags: ['Redes'] }],
+      [{ orientador: 'Prof. Carlos Lima' }, { colecao: 'Ciência da Computação' }],
+      [{ ano: 2025 }, { orientador: 'Prof. Carlos Lima' }, { tags: ['Segurança'] }],
+      [{ termo: 'redes' }, { colecao: 'Engenharia de Computação' }, { ano: 2025 }],
+    ];
+    for (const partes of combinacoes) {
+      const junto = ids(Object.assign({}, ...partes));
+      const intersecao = partes.map((f) => new Set(ids(f))).reduce((a, b) => new Set([...a].filter((x) => b.has(x))));
+      assert.deepEqual(junto, [...intersecao].sort(), JSON.stringify(partes));
+    }
+  });
   test('CT27 e CT28 (CI16, CI17): autor e orientador sem TCC levam a resultado vazio (FA01)', () => {
     assert.deepEqual(ids({ autor: 'Fulano Inexistente' }), []);
     assert.deepEqual(ids({ orientador: 'Profª Inexistente' }), []);

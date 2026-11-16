@@ -80,6 +80,7 @@ function lerPrompts(arquivo, esperado) {
 const promptsSdd = lerPrompts(path.join(ETAPA2, 'prompts-sdd.md'), 6);
 const promptsTestes = lerPrompts(path.join(ETAPA2, 'testes-funcionais', 'prompts-testes.md'), 2);
 const imagem = fs.readFileSync(path.join(ETAPA2, 'relatorio', 'figura1-arquitetura.png'));
+const imagemSeq = fs.readFileSync(path.join(ETAPA2, 'relatorio', 'figura2-sequencia-uc04.png'));
 
 // =====================================================================================
 function construir() {
@@ -103,6 +104,20 @@ function construir() {
     LI('**SDD:** aplicação das seis fases do Spec-Driven Development à funcionalidade **RF#02 / UC04 - Buscar e Filtrar TCCs** (US#04; CT03, CT05 e CT06);'),
     LI('**Testes funcionais:** ampliação dos casos de teste da Etapa 1 com classes de equivalência e análise de valor limite, para as duas funcionalidades, com um prompt simples e depois um refinado.'),
     P('O UC04 foi escolhido para o SDD por três motivos. Ele combina vários filtros e tem dois fluxos alternativos (FA01, busca sem resultado; FA02, falha no download). Tem três casos de teste prontos, o que permite verificar o resultado de forma automática. E o protótipo já implementa a busca, o que dá uma referência para comparar.'),
+    H2('1.1. Como esta entrega responde ao parecer da Etapa 1'),
+    P('O parecer da Etapa 1 chegou durante a Etapa 2. Pelo enunciado, o relatório da Etapa 1 com os ajustes aplicados é entregue na Etapa 3, junto com os testes funcionais. Por isso este documento não refaz a Etapa 1: ele atende agora o que o parecer pede para a Etapa 2 e o que já foi possível adiantar, e registra o que fica para a consolidação (Tabela {T:parecer}).'),
+    TAB('parecer', 'Resposta ao parecer da Etapa 1'),
+    tabela(['Ponto do parecer', 'Atendido nesta entrega', 'Fica para a Etapa 3'], [
+      ['1. Arquivo × link do LUME: o sistema guarda o documento ou só o link?', 'Regra definida na seção 2.1 e conferida no protótipo: o link é obrigatório e é a fonte oficial; o arquivo é uma cópia opcional', 'Levar a regra ao RF#01, ao UC01 e ao UC04 (novo fluxo para TCC sem arquivo)'],
+      ['1. Regras de publicação, rascunho, edição e acesso', 'Seções 2.2 e 2.3, com a tabela de quem pode publicar, editar e baixar; duas divergências entre especificação e protótipo registradas na seção 2.4', 'Especificar o UC02 (Editar TCC) e corrigir as divergências'],
+      ['2. Diagrama de casos de uso: funcionalidades por ator e limites do sistema', 'Ajustes definidos na Tabela {T:uml}', 'Redesenhar o diagrama'],
+      ['2. Diagrama de pacotes: camadas, dependências e notação', 'Ajustes definidos na Tabela {T:uml}; as camadas e dependências pretendidas já aparecem na Figura 1', 'Redesenhar o diagrama'],
+      ['2. Diagrama de sequência: conferir o UC01 e incluir a busca com filtros', 'Novo diagrama de sequência do UC04 (Figura 2); correções do UC01 definidas na Tabela {T:uml}', 'Redesenhar o diagrama do UC01'],
+      ['2. Diagramas de atividades: caminhos alternativos, decisões e caminhos finais', 'Ajustes definidos na Tabela {T:uml}', 'Redesenhar os dois diagramas'],
+      ['3. Testes: classes de equivalência, valor limite, fluxos alternativos, filtros, controle de acesso; separar o CT04', 'Seção 7: 44 casos novos (CT07 a CT50), 31 testes automáticos e a cobertura de cada recomendação na Tabela {T:parecerTestes}', 'Executar os casos manuais e incorporá-los ao relatório consolidado'],
+      ['4. Evidências da colaboração humano-IA', 'Ferramentas e atividades: Tabela {T:sdlc}. Prompts e refinamento: seção 6.3 e Anexos A, B e C. Aceito, modificado e descartado: Tabelas {T:registroSdd}, {T:registroTestes} e {T:decisoesHumanas}. Verificação: seções 7.5 e 8.2. Limitações e benefícios: seções 5.6, 10.3 e 11', 'Nada pendente; o grupo completa as avaliações das experiências da Etapa 1 (Anexo C)'],
+    ], [3, 4.4, 2.6]),
+    FONTE('Fonte: parecer da Etapa 1 (Profª Leticia Santos Machado) e elaboração do grupo.'),
   );
 
   // 2. Protótipo
@@ -113,6 +128,37 @@ function construir() {
     LI('**RF#02 (UC04, UC05, UC06):** feed de descoberta, busca com filtros combinados, página de detalhes com trabalhos conexos e download.'),
     P('Um painel de demonstração simula o LUME indisponível e a falha de download e restaura os dados iniciais (TCCs A a E). Assim, os seis casos de teste CT01 a CT06 podem ser executados na própria interface, e foi assim que o grupo verificou se o comportamento correspondia ao especificado.'),
     P('O protótipo foi gerado com IA (Claude Code, experiência 5 do Anexo C), como permite o enunciado, a partir dos casos de uso, das regras e dos casos de teste do grupo. [GRUPO: descrever em uma ou duas frases o que vocês revisaram ou pediram para ajustar no protótipo depois de gerado.]'),
+    P('O parecer da Etapa 1 pediu que a especificação e o protótipo apresentem o mesmo comportamento e que as regras de publicação, rascunho, edição e acesso fiquem explícitas. As seções 2.1 a 2.3 descrevem as regras como o protótipo as implementa hoje, conferidas no código; a seção 2.4 lista onde a especificação e o protótipo ainda divergem.'),
+    H2('2.1. Arquivo do trabalho e link do LUME'),
+    P('A plataforma guarda as duas coisas, com papéis diferentes:'),
+    LI('**Link do LUME:** obrigatório para publicar. É a fonte oficial do TCC, e a plataforma só o valida e aponta para ele. Toda página de TCC tem o botão "Ver no LUME".'),
+    LI('**Arquivo do trabalho (DOCX, PDF ou EPUB):** opcional. É uma cópia guardada pela plataforma para o leitor baixar sem sair dela. Com arquivo, a página mostra "Baixar Artigo"; sem arquivo, mostra "Acessar texto no LUME".'),
+    P('Assim, a plataforma não substitui o LUME: um TCC sem link não é publicado, e um TCC sem arquivo continua acessível pelo LUME. [GRUPO: confirmar que esta é a regra desejada. A alternativa seria só o link, sem guardar arquivo, o que eliminaria o download, o FA02 do UC04 e o CT06.]'),
+    H2('2.2. Publicação, rascunho e edição'),
+    LI('**Publicar:** exige título, resumo, ano/semestre, orientador, ao menos uma tag e o link do LUME. Os campos são validados primeiro (FA01); só depois o link é verificado no LUME (FA02). Publicado, o TCC aparece no feed, na busca e nos trabalhos conexos.'),
+    LI('**Rascunho:** quando o link não é validado, o sistema oferece salvar como rascunho. O rascunho só é visto pelo autor, no perfil e na página do TCC, com uma faixa de aviso. Ele nunca aparece no feed, na busca nem nos trabalhos conexos; para os demais usuários, a página mostra "Este TCC não está disponível".'),
+    LI('**Editar:** só o autor edita os próprios TCCs, publicados ou em rascunho, no mesmo formulário do cadastro. Ao salvar, os campos e o link são validados de novo. Um rascunho com o link corrigido passa a publicado.'),
+    LI('**Excluir:** não existe exclusão de TCC no protótipo. [GRUPO: confirmar que fica fora do escopo.]'),
+    H2('2.3. Acesso por tipo de usuário'),
+    TAB('acesso', 'O que cada tipo de usuário pode fazer'),
+    tabela(['Ação', 'Visitante (sem login)', 'Aluno formando (autenticado)', 'Professor (autenticado)'], [
+      ['Ver o feed, buscar e filtrar TCCs publicados', 'Sim', 'Sim', 'Sim'],
+      ['Ver os detalhes e os trabalhos conexos de um TCC publicado', 'Sim', 'Sim', 'Sim'],
+      ['Baixar o arquivo ou acessar o texto no LUME', 'Sim', 'Sim', 'Sim'],
+      ['Cadastrar e publicar TCC', 'Não: tela "Publicação restrita a formandos", com o botão de login', 'Sim', 'Não: mesma tela, com "Voltar ao feed"'],
+      ['Editar TCC', 'Não', 'Só os próprios', 'Não'],
+      ['Ver rascunho', 'Não', 'Só os próprios', 'Não'],
+      ['Perfil', 'Pede login', 'Lista os próprios TCCs, publicados e rascunhos', 'Lista os trabalhos publicados que orienta ou coorienta'],
+    ], [3.4, 2.2, 2.2, 2.2]),
+    FONTE('Fonte: comportamento do protótipo, conferido no código (src/views/).'),
+    P('O protótipo tem só dois perfis autenticados. O "aluno pesquisador" da especificação, que é um aluno autenticado que não é formando, navega como o visitante. [GRUPO: confirmar se isso basta ou se ele deve ter um perfil próprio.]'),
+    H2('2.4. Onde a especificação e o protótipo ainda divergem'),
+    LI('**Rascunho sem link:** o UC01 diz que, sem a URL do LUME, o trabalho "pode ser salvo como rascunho". No protótipo, o rascunho só é oferecido depois que a validação do link falha (FA02); com o link vazio, o formulário cai no FA01 e não há como salvar. [GRUPO: decidir. Sugestão: um botão "Salvar como rascunho" no formulário, que exige só o título.]'),
+    LI('**Edição que despublica:** ao editar um TCC já publicado, se o link falhar na nova validação e o autor aceitar o rascunho, o TCC sai do feed. A especificação não prevê esse caso. [GRUPO: decidir. Sugestão: manter a versão publicada e avisar o autor.]'),
+    LI('**TCC sem arquivo:** o protótipo trata o caso (botão "Acessar texto no LUME"), mas o UC04 não tem esse fluxo.'),
+    LI('**Coleção:** o protótipo filtra por curso, mas o diagrama de classes não tem o atributo (seção 9).'),
+    LI('**Limites de tamanho:** os limites de texto e de arquivo propostos na seção 7.2 ainda não são aplicados pelo protótipo.'),
+    P('As três últimas se resolvem ajustando a especificação ou o protótipo conforme a decisão já tomada; as duas primeiras dependem de decisão do grupo. Todas entram na consolidação da Etapa 3.'),
   );
 
   // 3. Arquitetura
@@ -143,6 +189,10 @@ function construir() {
     H2('3.3. Comunicação'),
     P('O cliente chama uma API REST. Para o UC04: `GET /tccs?termo=&ano=&autor=&orientador=&tags=&colecao=` (busca), `GET /tccs/{id}` (detalhes) e `GET /tccs/{id}/arquivo` (download). Cadastro e edição (UC01, UC02) usam `POST /tccs` e `PUT /tccs/{id}` e exigem autenticação; o feed usa `GET /feed`.'),
     P('Dentro do servidor, as chamadas descem de forma síncrona (controller → service → repository), como no diagrama de pacotes; uma camada nunca chama a de cima. Os sistemas externos ficam atrás de interfaces, para que os testes possam simular o LUME fora do ar (CT02) ou a queda de conexão no meio do download (CT06).'),
+    P('A Figura 2 mostra essa comunicação para o UC04, do clique em "Pesquisar" ao download, com os dois fluxos alternativos. O parecer da Etapa 1 pediu esse diagrama, porque o de sequência entregue cobria só o cadastro (UC01). Os nomes das classes e dos métodos são os do diagrama de classes; o ArmazenamentoArquivos é a interface nova proposta na seção 3.2.'),
+    legenda('Figura 2 - Diagrama de sequência do UC04 (Buscar e Filtrar TCCs)'),
+    new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, children: [new ImageRun({ type: 'png', data: imagemSeq, transformation: { width: 660, height: 720 } })] }),
+    FONTE('Fonte: elaborado pelo grupo.'),
     H2('3.4. Persistência e dados'),
     P('O banco relacional segue o diagrama de classes, com duas mudanças que o experimento mostrou serem necessárias: um atributo **coleção** (curso de origem) no TCC e no FiltroBusca (seção 9), e campos de busca normalizados, sem acentos e em minúsculas, para que "deteccao" encontre "Detecção". Os arquivos ficam fora do banco. O status (RASCUNHO ou PUBLICADO) é uma coluna do TCC, e as consultas públicas filtram por PUBLICADO.'),
     P('O protótipo guarda o estado no `localStorage` do navegador, o que basta para demonstração; as implementações do SDD usam um repositório em memória com os TCCs A a E do CT03.'),
@@ -362,7 +412,7 @@ function construir() {
       ['TCC sem arquivo', 'Botão "Acessar texto no LUME"', 'Não oferece o download', 'Recusa o download com mensagem e link do LUME'],
       ['Falha no download', 'Mensagem do FA02 (simulada)', 'Mensagem do FA02; nada parcial é entregue', 'Mensagem do FA02; nada parcial é entregue'],
       ['Termo dentro de uma palavra ("IA" em "anomalias")', 'Encontra (problema)', 'Encontra (problema)', 'Encontra (problema)'],
-      ['Testes automatizados', 'Na Etapa 1, nenhum (CTs executados à mão); na Etapa 2, 28 testes funcionais da lógica', '53', '12'],
+      ['Testes automatizados', 'Na Etapa 1, nenhum (CTs executados à mão); na Etapa 2, 31 testes funcionais da lógica', '53', '12'],
     ], [2.2, 2.8, 2.5, 2.5]),
     FONTE('Fonte: elaborado pelo grupo.'),
     P('Olhando o trabalho todo, três observações respondem à pergunta do enunciado ("o artefato ficou melhor por causa da IA ou apenas foi produzido mais rapidamente?"):'),
@@ -388,7 +438,7 @@ function construir() {
       ['Ambas: termo casado por qualquer trecho', 'Modificada: o termo casa o início de uma palavra', 'Evita que "IA" traga "anomalias" (seção 8.2), sem perder os plurais ("rede" encontra "redes"). O protótipo tem o mesmo problema e será ajustado.'],
       ['Gemini (Analyze): "0 violações da constituição"', 'Rejeitada após inspeção', 'Ver a Tabela {T:registroSdd} (contradições).'],
       ['Ambas: inconsistências no material da Etapa 1', 'Aceitas e conferidas uma a uma', 'Seção 10.'],
-      ['Claude (testes funcionais): versão refinada, com 25 lacunas', 'Aceita como base; lacunas decididas pelo grupo; 10 casos acrescentados (CT31 a CT40)', 'As lacunas eram decisões que a Etapa 1 não tinha tomado; quase todas foram resolvidas pelo comportamento do protótipo ou pelo Clarify (Tabela {T:lacunas}).'],
+      ['Claude (testes funcionais): versão refinada, com 25 lacunas', 'Aceita como base; lacunas decididas pelo grupo; 20 casos acrescentados (CT31 a CT50)', 'As lacunas eram decisões que a Etapa 1 não tinha tomado; quase todas foram resolvidas pelo comportamento do protótipo ou pelo Clarify (Tabela {T:lacunas}).'],
       ['Claude (testes funcionais): retirar o teste de domínio parecido com o do LUME', 'Rejeitada: o caso voltou como exemplo da classe CI05', 'É um engano realista do usuário e cabe na classe "outro domínio".'],
       ['Antigravity (testes funcionais): classe "semestre posterior ao atual"', 'Aceita, com o ano corrente corrigido de 2025 para 2026/2 (CI29, CT41)', 'É consequência direta da pré-condição "TCC já defendido", e o Claude a tinha deixado como lacuna.'],
       ['Antigravity (testes funcionais, prompt simples): base de teste e casos CT12 e CT20', 'Rejeitados', 'Contradiziam a tabela do CT03 (semestre e tags dos TCCs, autor e orientador do rascunho) e usavam regras que o relatório não define.'],
@@ -417,8 +467,20 @@ function construir() {
       ['User stories numeradas US#01 e US#04, sem US#02 e US#03', 'Revisão do grupo (nenhuma IA)', 'Renumerar ou explicar a numeração'],
       ['Protótipo: a lista de semestres do cadastro termina em 2026/1, e o semestre atual (2026/2) não pode ser escolhido', 'Testes funcionais (valor limite)', 'A lista vai até o semestre atual [GRUPO: confirmar]'],
       ['Protótipo: o termo casa trechos no meio de palavras ("IA" encontra "anomalias")', 'Testes independentes e funcionais', 'Casar o início de uma palavra'],
+      ['UC01 permite rascunho sem link, mas o protótipo só oferece o rascunho depois da falha do link', 'Conferência do protótipo para o parecer', 'Seção 2.4 [GRUPO: decidir]'],
+      ['Editar um TCC publicado pode transformá-lo em rascunho; o caso não está especificado', 'Conferência do protótipo para o parecer', 'Seção 2.4 [GRUPO: decidir]'],
     ], [4.2, 1.8, 4]),
     FONTE('Fonte: analysis.md das duas ferramentas, conferido pelo grupo.'),
+    P('O parecer da Etapa 1 apontou problemas nos diagramas UML que coincidem em parte com os achados das IAs. A Tabela {T:uml} junta as duas fontes e define o ajuste de cada diagrama. O diagrama de sequência do UC04 já está nesta entrega (Figura 2); os demais serão redesenhados na Etapa 3.'),
+    TAB('uml', 'Ajustes dos diagramas UML: parecer, achados das IAs e correção prevista'),
+    tabela(['Diagrama', 'O que o parecer aponta', 'O que as IAs também acharam', 'Ajuste previsto'], [
+      ['Casos de uso', 'Funcionalidades de cada ator e limites do sistema pouco claros; conferir os relacionamentos', 'Visitante é ator do UC04, mas não está no diagrama; o Aluno Formando não herda de Usuário Leitor, então pelo diagrama ele não poderia buscar; o UC05 não tem descrição', 'Atores: Visitante, Aluno e Professor como leitores; Aluno Formando como especialização de Aluno. Fronteira do sistema com o LUME e o login do lado de fora. Feed e download como casos de uso do leitor. Rever o «extend» do UC06 e os «include» do UC03'],
+      ['Pacotes', 'Camadas e dependências pouco claras; a notação parece de componentes', 'O pacote dto está na camada de apresentação, mas repository e service dependem dele; ArquivoTcc e ArquivoTCC com grafias diferentes', 'Usar só a notação de pacotes, sem o LUME como componente. Dependências de cima para baixo, como na Figura 1: controller → service → repository → model. O dto sai da apresentação e vira pacote compartilhado'],
+      ['Sequência (UC01)', 'Conferir a correspondência com o caso de uso; falta a busca com filtros', 'Seta "status" saindo do TccRepository para o LUME; validarCamposObrigatorios() no TccService, mas o método é do TCC; métodos com grafias diferentes', 'Corrigir as duas mensagens; acrescentar o FA01 (campos incompletos) e as duas respostas à oferta de rascunho. A busca com filtros é a Figura 2 desta entrega'],
+      ['Atividades (UC01)', 'Rever caminhos alternativos e condições; os caminhos finais são alternativas ou atividades paralelas?', 'Mensagens diferentes das do UC01; raia "Aluno Graduando" em vez de "Aluno Formando"; a recusa do rascunho não volta ao formulário', 'Os caminhos finais são alternativas: trocar a barra de bifurcação por um nó final depois de "publicar" e outro depois de "salvar rascunho". Tirar as atividades "Consultar TCCs", que são do UC04. Escrever as condições em cada saída das decisões'],
+      ['Atividades (UC04)', 'Rever os fluxos de busca sem resultados e as condições das decisões', 'Mensagens do FA01 e do FA02 abreviadas; falta o filtro de coleção; não há caminho para TCC sem arquivo', 'Usar os textos completos do UC04; incluir a coleção nos filtros; nova decisão "o TCC tem arquivo?", com a saída para o LUME'],
+    ], [1.3, 2.5, 2.9, 3.3]),
+    FONTE('Fonte: parecer da Etapa 1 e arquivos analysis.md das duas ferramentas.'),
     H2('10.2. No código gerado'),
     P('Os erros do código gerado (A04, A06, A07, ano inválido e a simulação de falha só aparente do Antigravity) foram confirmados pelos testes independentes e pela leitura do código. O código foi mantido como as ferramentas o entregaram, para que a comparação reflita a saída real; as correções foram registradas como decisões (Tabela {T:decisoesHumanas}) para a versão final.'),
     H2('10.3. No próprio experimento'),
@@ -498,8 +560,10 @@ function construir() {
     ['5. Revisão, CT04 a CT06, atividades do UC04 e protótipo (Etapa 1)', [
       'Revisão da Etapa 1 e construção do protótipo', 'Relatório da Etapa 1, CT04 a CT06, diagrama de atividades do UC04, linha do LUME no benchmark, protótipo React',
       'Claude Code (Claude Opus 5.5), executado no repositório', 'Conferir a aderência ao enunciado, apontar inconsistências e completar os artefatos',
-      'Enunciado, relatório da Etapa 1 e repositório', 'Pedidos sucessivos na mesma sessão, um por artefato', 'Lista de inconsistências e os artefatos citados',
-      'Parcial: o grupo aplicou as correções manualmente no documento original [GRUPO: confirmar]', G,
+      'Enunciado, relatório da Etapa 1 e repositório',
+      'Um pedido inicial com quatro itens e, depois, dois pedidos de conferência. Trecho do pedido inicial: "Adicione no word os 3 casos de teste faltantes [...], seguindo o mesmo modelo que usamos"; "Gere [...] o protótipo de alta fidelidade que o enunciado pede"; "liste todas as suas adições e mudanças para mim". O refinamento veio nas conferências: "realizei as mudanças manualmente no doc original, verifique apenas se está tudo de acordo"',
+      'Lista de inconsistências e os artefatos citados',
+      'Parcial: o grupo não usou o documento gerado; aplicou as mudanças à mão no documento original e pediu duas conferências', G,
       'Os seis casos de teste executados no protótipo', 'Velocidade e uma revisão completa do documento',
       'O diagrama de atividades gerado abreviou as mensagens do FA01 e do FA02 (achado posterior do SDD)', G,
     ]],
@@ -544,7 +608,7 @@ function construir() {
     LI('`claude-code/` e `antigravity/`: as saídas de cada ferramenta no SDD (`specs/001-buscar-filtrar-tccs/`, `src/`, `tests/`);'),
     LI('`oraculo/`: os 17 testes independentes e os adaptadores;'),
     LI('`testes-funcionais/`: o experimento de classes de equivalência e valor limite (pacote, prompts e saídas); os testes automáticos da lógica do protótipo estão em `tests/testes-funcionais.test.js`, na raiz do repositório (`node --test tests/`);'),
-    LI('`relatorio/`: este rascunho, a figura de arquitetura e os scripts que os geram.'),
+    LI('`relatorio/`: este rascunho, as figuras 1 e 2 e os scripts que os geram.'),
     P('Para reproduzir, com Node.js 20 ou superior e sem `npm install`: `node --test` dentro de `claude-code/` ou de `antigravity/`, e `IMPL=claude node --test oraculo/` ou `IMPL=antigravity node --test oraculo/` dentro de `etapa2/`.'),
   );
   return c;

@@ -68,6 +68,8 @@ A pasta `etapa2/` contém o experimento de Spec-Driven Development aplicado ao R
 | `etapa2/registro-experimentos.md` | Registro completo dos experimentos |
 | `etapa2/claude-code/`, `etapa2/antigravity/` | Saída de cada ferramenta: spec, plano, tarefas, análise, código e testes |
 | `etapa2/oraculo/` | 17 testes independentes, rodados nas duas implementações |
+| `etapa2/testes-funcionais/` | Experimento de classes de equivalência e valor limite (pacote, prompts e saídas das duas ferramentas) |
+| `tests/` | 31 testes funcionais automáticos da lógica do protótipo (`npm test`) |
 
 Requer Node.js 20 ou superior, sem `npm install`:
 

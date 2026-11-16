@@ -138,7 +138,7 @@ O que entrou na consolidação: a classe "semestre posterior ao atual" (CI29, ca
 
 ### Consolidação
 
-A seção 7 do relatório usa a v2 do Claude como base. As lacunas foram decididas pelo grupo, quase todas pelo comportamento do protótipo ou pelas decisões do Clarify, e as classes e os casos derivados dessas decisões foram acrescentados (CT31 a CT40), além do CT41, que veio do Antigravity. Os casos de lógica foram automatizados em `tests/testes-funcionais.test.js`, na raiz do repositório: 29 testes, 27 aprovados e 2 registrados como divergência do protótipo (lista de semestres sem 2026/2; termo "IA" encontrando "anomalias").
+A seção 7 do relatório usa a v2 do Claude como base. As lacunas foram decididas pelo grupo, quase todas pelo comportamento do protótipo ou pelas decisões do Clarify, e as classes e os casos derivados dessas decisões foram acrescentados (CT31 a CT40), além do CT41, que veio do Antigravity. Os casos de lógica foram automatizados em `tests/testes-funcionais.test.js`, na raiz do repositório: 31 testes, 29 aprovados e 2 registrados como divergência do protótipo (lista de semestres sem 2026/2; termo "IA" encontrando "anomalias").
 
 ### Comparação
 
@@ -148,3 +148,7 @@ A seção 7 do relatório usa a v2 do Claude como base. As lacunas foram decidid
 | Prompt 2 | 24 casos, 59 classes, 25 lacunas | 20 casos, 54 classes, 12 lacunas; ano corrente errado (2025) |
 | Efeito do refinamento | Mais rigor, mesmo volume | Corrigiu os dados inventados; passou de descartável a aproveitável |
 | Aproveitado na consolidação | Base da seção 7 (CT07 a CT30 e as 25 lacunas) | Classe CI29 e caso CT41 |
+
+### Depois do parecer da Etapa 1
+
+O parecer da professora sobre a Etapa 1 recomenda os mesmos critérios e lista o que testar. As recomendações foram conferidas uma a uma (seção 7.6 do relatório) e os casos que faltavam foram acrescentados: CT42 e CT43 (cada filtro sozinho e combinações, automáticos), CT44 a CT46 (edição de TCC), CT47 e CT48 (rascunho e controle de acesso) e CT49 e CT50 (limites de tamanho de texto e de arquivo, que dependem de valores a confirmar pelo grupo).
