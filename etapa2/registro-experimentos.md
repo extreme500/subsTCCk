@@ -33,7 +33,7 @@ Execução em 08/11/2026. Cada fase tem um snapshot no histórico git de `claude
 - **Modelo (como aparece no seletor):** Gemini 4 Argon (High), conforme o histórico local da conversa no Antigravity
 - **Modo do agente (Planning/Fast):** configuração padrão, não alterada; raciocínio High
 - **Política de execução no terminal:** controle total: o agente executava comandos sem pedir confirmação (rodou `node --test` cinco vezes na fase Implement)
-- **Critério de resposta no Clarify:** o grupo respondeu só com as opções oferecidas pelo modelo, para medir o que ele propunha (no Claude, o grupo respondeu com as próprias decisões)
+- **Critério de resposta no Clarify:** o grupo respondeu só com as opções oferecidas pelo modelo, para medir o que ele propunha. Foi o mesmo critério usado no Claude, cujas 5 respostas também foram opções da própria ferramenta (em Coleção, a opção B, "curso"). A diferença é que o Gemini não ofereceu "curso" entre as opções
 
 Execução em 09/11/2026 (Specify) e 10/11/2026 (demais fases). Não há snapshot git por fase; os horários vêm do histórico local da conversa.
 
