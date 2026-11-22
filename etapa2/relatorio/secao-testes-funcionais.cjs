@@ -167,7 +167,7 @@ module.exports = {
     { h2: '7.6. Cobertura das recomendações do parecer' },
     { p: 'A Tabela {T:parecerTestes} mostra como cada recomendação do parecer da Etapa 1 sobre os testes funcionais foi atendida.' },
     { tabela: { chave: 'parecerTestes', titulo: 'Recomendações do parecer sobre testes e casos que as atendem', cab: ['Recomendação do parecer', 'Como foi atendida', 'Casos'], pesos: [3.2, 4.4, 2.4], fonte: 'Fonte: parecer da Etapa 1 e seção 7.5.', linhas: [
-      ['Classes de equivalência: dados válidos e inválidos no cadastro', 'Tabela {T:ceUc01}: 20 classes válidas e 19 inválidas, com uma classe inválida por caso', 'CT07 a CT22, CT38 a CT41'],
+      ['Classes de equivalência: dados válidos e inválidos no cadastro', 'Tabela {T:ceUc01}: 19 classes válidas e 18 inválidas, com uma classe inválida por caso', 'CT07 a CT22, CT38 a CT41'],
       ['URLs válidas e inválidas', 'Classes CV08 e CI05 a CI08: outro domínio, domínio parecido, item inexistente, LUME indisponível e link vazio', 'CT01, CT02, CT20, CT21, CT22'],
       ['Usuários autorizados e não autorizados', 'Classes CV01, CI01 e CI22; tabela de acesso da seção 2.3', 'CT11, CT37, CT46, CT47, CT48, CT54'],
       ['Formatos de arquivo permitidos e não permitidos', 'Classes CV14 a CV16, CI12 e CI25', 'CT07, CT08, CT09, CT18, CT39'],
