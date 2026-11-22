@@ -61,7 +61,7 @@ A pasta `etapa2/` contém o experimento de Spec-Driven Development aplicado ao R
 
 | Caminho | Conteúdo |
 |---|---|
-| `etapa2/relatorio/` | Rascunho do relatório da Etapa 2 (.docx) e a figura de arquitetura |
+| `etapa2/relatorio/` | Relatório final entregue (PDF), rascunho gerado (.docx), figuras 1 e 2 e os scripts que os geram |
 | `etapa2/pacote-entrada/` | Pacote igual entregue às duas ferramentas (constituição, modelos, relatório e diagramas da Etapa 1) |
 | `etapa2/prompts-sdd.md` | Os seis prompts (Specify, Clarify, Plan, Tasks, Implement, Analyze) |
 | `etapa2/decisoes-clarify.md` | Decisões do grupo e respostas dadas a cada ferramenta |
