@@ -30,7 +30,7 @@ export default function Busca({ params }) {
     setAplicado(chaveUrl ? f : null)
   }, [chaveUrl])
 
-  const anos = useMemo(() => [...new Set(estado.tccs.map((t) => t.ano))].sort((a, b) => b - a), [estado.tccs])
+  const anos = useMemo(() => [...new Set(estado.tccs.filter((t) => t.status === 'PUBLICADO' && t.ano).map((t) => t.ano))].sort((a, b) => b - a), [estado.tccs])
   const tagsDisponiveis = useMemo(() => {
     const todas = new Set(TAGS_SUGERIDAS)
     estado.tccs.forEach((t) => t.tags.forEach((x) => todas.add(x)))

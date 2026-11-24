@@ -2,11 +2,15 @@
 import { useRef, useState } from 'react'
 import { useApp } from '../App.jsx'
 import {
-  validarCamposObrigatorios, validarIntegridadeLink, formatoDoArquivo, novoId, ir, normalizar,
+  validarCamposObrigatorios, validarRascunho, validarIntegridadeLink, decidirPublicacao, verificarTamanho,
+  formatoDoArquivo, novoId, ir, normalizar,
 } from '../lib.js'
 import { Icone, Modal } from '../components/ui.jsx'
 import { Figura, Tag } from '../components/Art.jsx'
-import { TAGS_SUGERIDAS, ORIENTADORES, SEMESTRES, LIMITE_TAGS, LIMITE_MIDIAS } from '../data.js'
+import {
+  TAGS_SUGERIDAS, ORIENTADORES, SEMESTRES, LIMITE_TAGS, LIMITE_MIDIAS,
+  LIMITE_TITULO, LIMITE_RESUMO, LIMITE_NOME_TAG, LIMITE_ARQUIVO_MB, LIMITE_IMAGEM_MB,
+} from '../data.js'
 
 const TIPOS_EXEMPLO = ['grafo', 'barras', 'linha', 'tela']
 
@@ -15,7 +19,7 @@ function formDoTcc(t) {
     return { titulo: '', resumo: '', anoSemestre: '', orientador: '', coorientador: '', linkLume: '', tags: [], midias: [], arquivo: null }
   }
   return {
-    titulo: t.titulo, resumo: t.resumo, anoSemestre: `${t.ano}/${t.semestre}`, orientador: t.orientador,
+    titulo: t.titulo, resumo: t.resumo, anoSemestre: t.ano ? `${t.ano}/${t.semestre}` : '', orientador: t.orientador,
     coorientador: t.coorientador, linkLume: t.linkLume, tags: [...t.tags], midias: [...t.midias], arquivo: t.arquivo,
   }
 }
@@ -52,6 +56,7 @@ export default function Formulario({ id }) {
   const [novaTag, setNovaTag] = useState('')
   const [validando, setValidando] = useState(false)
   const [modal, setModal] = useState(null)
+  const [erroRascunho, setErroRascunho] = useState(false)
   const topo = useRef(null)
 
   if (!u || u.papel !== 'ALUNO_FORMANDO') {
@@ -75,6 +80,7 @@ export default function Formulario({ id }) {
   const atualizar = (campo, valor) => {
     setForm((f) => ({ ...f, [campo]: valor }))
     if (erros[campo]) setErros((e) => ({ ...e, [campo]: false }))
+    if (campo === 'titulo') setErroRascunho(false)
   }
   const avisarCampo = (campo, texto) => {
     setAvisosCampo((a) => ({ ...a, [campo]: texto }))
@@ -84,6 +90,7 @@ export default function Formulario({ id }) {
   const adicionarTag = (bruta) => {
     const tag = bruta.trim().replace(/\s+/g, ' ')
     if (!tag) return
+    if (tag.length > LIMITE_NOME_TAG) { avisarCampo('tags', `O nome da tag pode ter no máximo ${LIMITE_NOME_TAG} caracteres.`); return }
     if (form.tags.some((t) => normalizar(t) === normalizar(tag))) return
     if (form.tags.length >= LIMITE_TAGS) { avisarCampo('tags', `Limite de ${LIMITE_TAGS} tags atingido. Remova uma tag para adicionar outra.`); return }
     atualizar('tags', [...form.tags, tag.charAt(0).toUpperCase() + tag.slice(1)])
@@ -95,6 +102,8 @@ export default function Formulario({ id }) {
     for (const arq of arquivos) {
       if (atuais.length >= LIMITE_MIDIAS) { avisarCampo('midias', `Limite de ${LIMITE_MIDIAS} imagens atingido. Remova uma imagem para adicionar outra.`); break }
       if (!arq.type.startsWith('image/')) { avisarCampo('midias', 'Envie apenas arquivos de imagem (PNG, JPG, GIF, SVG).'); continue }
+      const grande = verificarTamanho(arq.size, LIMITE_IMAGEM_MB, `A imagem ${arq.name}`)
+      if (grande) { avisarCampo('midias', grande); continue }
       try {
         const src = await lerImagem(arq)
         atuais = [...atuais, { src, descricao: arq.name.replace(/\.[^.]+$/, '') }]
@@ -112,16 +121,18 @@ export default function Formulario({ id }) {
     if (!arq) return
     const formato = formatoDoArquivo(arq.name)
     if (!formato) { avisarCampo('arquivo', 'Formato não suportado. Envie um arquivo DOCX, PDF ou EPUB.'); return }
+    const grande = verificarTamanho(arq.size, LIMITE_ARQUIVO_MB, 'O arquivo')
+    if (grande) { avisarCampo('arquivo', grande); return }
     atualizar('arquivo', { nome: arq.name, formato })
   }
 
   const montarTcc = (status) => {
-    const [ano, semestre] = form.anoSemestre.split('/').map(Number)
+    const [ano, semestre] = form.anoSemestre ? form.anoSemestre.split('/').map(Number) : [null, null]
     return {
       ...(original || { id: novoId(), visualizacoes: 0, autor: u.nome, autorId: u.cartao, colecao: u.curso }),
       titulo: form.titulo.trim(), resumo: form.resumo.trim(), ano, semestre,
       orientador: form.orientador, coorientador: form.coorientador, linkLume: form.linkLume.trim(),
-      tags: form.tags, midias: form.midias, arquivo: form.arquivo, status,
+      tags: form.tags, midias: form.midias, arquivo: form.arquivo, status, devolvidoPor: null,
       publicadoEm: status === 'PUBLICADO' ? (original?.publicadoEm || new Date().toISOString().slice(0, 10)) : null,
     }
   }
@@ -137,13 +148,28 @@ export default function Formulario({ id }) {
     setValidando(true)
     const valido = await validarIntegridadeLink(form.linkLume, estado.demo.lumeIndisponivel)
     setValidando(false)
-    if (valido) {
+    const decisao = decidirPublicacao(original, valido)
+    if (decisao === 'PUBLICAR') {
       const tcc = montarTcc('PUBLICADO')
       salvarTcc(tcc)
       setModal({ tipo: 'sucesso', id: tcc.id })
+    } else if (decisao === 'MANTER_PUBLICADO') {
+      setModal({ tipo: 'edicao' })
     } else {
       setModal({ tipo: 'lume' })
     }
+  }
+
+  // Botão "Salvar como rascunho": exige só o título (CT51).
+  const rascunhoDireto = () => {
+    const encontrados = validarRascunho(form)
+    setErros(encontrados)
+    if (Object.keys(encontrados).length) {
+      setErroRascunho(true)
+      topo.current?.scrollIntoView({ behavior: 'smooth' })
+      return
+    }
+    salvarRascunho()
   }
 
   const salvarRascunho = () => {
@@ -154,6 +180,7 @@ export default function Formulario({ id }) {
   }
 
   const temErros = Object.values(erros).some(Boolean)
+  const podeSalvarRascunho = !original || original.status === 'RASCUNHO'
   const classe = (campo) => `campo ${erros[campo] ? 'com-erro' : ''}`
   const sugestoes = TAGS_SUGERIDAS.filter((t) => !form.tags.includes(t))
 
@@ -164,20 +191,25 @@ export default function Formulario({ id }) {
         <span className="suave pequeno">Campos com * são obrigatórios</span>
       </div>
 
+      {original?.devolvidoPor && (
+        <div className="faixa faixa-alerta"><Icone nome="alerta" /> {original.devolvidoPor} indicou que não orienta este trabalho. Confira o orientador e publique de novo.</div>
+      )}
       {temErros && (
-        <div className="alerta-erro" role="alert"><Icone nome="alerta" /> Preencha todos os campos obrigatórios</div>
+        <div className="alerta-erro" role="alert">
+          <Icone nome="alerta" /> {erroRascunho ? 'Para salvar o rascunho, informe pelo menos o título.' : 'Preencha todos os campos obrigatórios'}
+        </div>
       )}
 
       <form onSubmit={publicar} noValidate>
         <div className={classe('titulo')}>
           <label htmlFor="titulo" className="rotulo-oculto">Título *</label>
-          <textarea id="titulo" className="entrada-titulo" rows={2} placeholder="Título do TCC *" value={form.titulo} onChange={(e) => atualizar('titulo', e.target.value)} />
+          <textarea id="titulo" className="entrada-titulo" rows={2} placeholder="Título do TCC *" maxLength={LIMITE_TITULO} value={form.titulo} onChange={(e) => atualizar('titulo', e.target.value)} />
         </div>
         <div className={classe('resumo')}>
           <label htmlFor="resumo">Resumo simplificado *</label>
           <p className="dica">Explique o trabalho para alguém de outra área: qual problema, o que foi feito e o que foi descoberto.</p>
-          <textarea id="resumo" className="entrada-resumo" rows={6} value={form.resumo} onChange={(e) => atualizar('resumo', e.target.value)} placeholder="Escreva aqui o resumo acessível do seu trabalho…" />
-          <span className="contagem">{form.resumo.length} caracteres</span>
+          <textarea id="resumo" className="entrada-resumo" rows={6} maxLength={LIMITE_RESUMO} value={form.resumo} onChange={(e) => atualizar('resumo', e.target.value)} placeholder="Escreva aqui o resumo acessível do seu trabalho…" />
+          <span className="contagem">{form.resumo.length}/{LIMITE_RESUMO} caracteres</span>
         </div>
 
         <div className="cartao-form">
@@ -218,6 +250,7 @@ export default function Formulario({ id }) {
             {form.tags.map((t) => <Tag key={t} nome={t} ativo onRemover={() => atualizar('tags', form.tags.filter((x) => x !== t))} />)}
             <input
               value={novaTag}
+              maxLength={LIMITE_NOME_TAG}
               onChange={(e) => setNovaTag(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ',') { e.preventDefault(); adicionarTag(novaTag) } }}
               placeholder={form.tags.length ? 'Nova tag + Enter' : 'Digite uma tag e tecle Enter'}
@@ -233,7 +266,7 @@ export default function Formulario({ id }) {
 
         <div className="cartao-form">
           <h2>Imagens de demonstração</h2>
-          <p className="dica">Até {LIMITE_MIDIAS} imagens, gráficos ou capturas de tela do projeto. A primeira vira a capa no feed.</p>
+          <p className="dica">Até {LIMITE_MIDIAS} imagens, gráficos ou capturas de tela do projeto, com até {LIMITE_IMAGEM_MB} MB cada. A primeira vira a capa no feed.</p>
           <div className="midias">
             {form.midias.map((m, i) => (
               <div key={i} className="midia-item">
@@ -264,7 +297,7 @@ export default function Formulario({ id }) {
             <input id="linkLume" type="url" value={form.linkLume} onChange={(e) => atualizar('linkLume', e.target.value)} placeholder="https://lume.ufrgs.br/handle/10183/…" />
           </div>
           <div className="campo">
-            <label>Arquivo do trabalho <span className="suave">(opcional · DOCX, PDF ou EPUB)</span></label>
+            <label>Arquivo do trabalho <span className="suave">(opcional · DOCX, PDF ou EPUB, até {LIMITE_ARQUIVO_MB} MB)</span></label>
             <div className="arquivo-linha">
               {form.arquivo ? (
                 <span className="arquivo-chip"><Icone nome="arquivo" tamanho={16} /> {form.arquivo.nome}
@@ -283,6 +316,9 @@ export default function Formulario({ id }) {
 
         <div className="form-acoes">
           <a className="botao botao-contorno" href={id ? `#/tcc/${id}` : '#/perfil'}>Cancelar</a>
+          {podeSalvarRascunho && (
+            <button type="button" className="botao botao-secundario" onClick={rascunhoDireto} disabled={validando}>Salvar como rascunho</button>
+          )}
           <button type="submit" className="botao botao-primario" disabled={validando}>
             {validando ? <><span className="girando" /> Validando link no LUME…</> : 'Publicar TCC'}
           </button>
@@ -301,6 +337,17 @@ export default function Formulario({ id }) {
           </>}
         >
           <p>A URL informada não pertence ao domínio do LUME ou está inacessível. Deseja salvar como rascunho até que a publicação no LUME esteja homologada?</p>
+        </Modal>
+      )}
+      {modal?.tipo === 'edicao' && (
+        <Modal
+          titulo="As alterações não foram salvas"
+          icone="alerta"
+          tom="alerta"
+          onFechar={() => setModal(null)}
+          acoes={<button className="botao botao-primario" onClick={() => setModal(null)}>Corrigir o link</button>}
+        >
+          <p>A URL informada não pertence ao domínio do LUME ou está inacessível. A versão publicada do seu TCC continua no ar, sem as alterações. Corrija o link e salve de novo.</p>
         </Modal>
       )}
       {modal?.tipo === 'sucesso' && (

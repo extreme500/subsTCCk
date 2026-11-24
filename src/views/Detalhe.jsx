@@ -4,6 +4,7 @@ import { useApp } from '../App.jsx'
 import { baixarArquivo, formatarSemestre, gerarPdf, ir, trabalhosConexos } from '../lib.js'
 import { Capa, Figura, Tag, Avatar } from '../components/Art.jsx'
 import { Icone, Vazio } from '../components/ui.jsx'
+import BotaoExcluir from '../components/Excluir.jsx'
 
 export default function Detalhe({ id }) {
   const { estado, registrarVisualizacao, avisar } = useApp()
@@ -48,7 +49,9 @@ export default function Detalhe({ id }) {
     <article className="pagina leitura">
       {tcc.status === 'RASCUNHO' && (
         <div className="faixa faixa-alerta">
-          <Icone nome="alerta" /> Rascunho — visível apenas para você. Ele não aparece no feed nem na busca até ser publicado com um link válido do LUME.
+          <Icone nome="alerta" /> {tcc.devolvidoPor
+            ? `${tcc.devolvidoPor} indicou que não orienta este trabalho, e ele voltou a ser rascunho. Confira o orientador e publique de novo.`
+            : 'Rascunho — visível apenas para você. Ele não aparece no feed nem na busca até ser publicado com um link válido do LUME.'}
           <a href={`#/editar/${tcc.id}`} className="botao botao-pequeno botao-contorno">Editar e publicar</a>
         </div>
       )}
@@ -61,23 +64,24 @@ export default function Detalhe({ id }) {
           <div>
             <strong>{tcc.autor}</strong>
             <span className="suave">
-              Orientação: {tcc.orientador}{tcc.coorientador && ` · Coorientação: ${tcc.coorientador}`}
+              Orientação: {tcc.orientador || 'não informada'}{tcc.coorientador && ` · Coorientação: ${tcc.coorientador}`}
             </span>
             <span className="suave">{tcc.colecao} · Defendido em {formatarSemestre(tcc)}</span>
           </div>
         </div>
         <div className="leitura-acoes">
-          {tcc.arquivo ? (
+          {tcc.arquivo && tcc.status === 'PUBLICADO' ? (
             <button className="botao botao-primario" onClick={baixar} disabled={download === 'baixando'}>
               <Icone nome="baixar" /> {download === 'baixando' ? 'Baixando…' : 'Baixar Artigo'}
               {download !== 'baixando' && <span className="formato">{tcc.arquivo.formato}</span>}
             </button>
-          ) : (
+          ) : tcc.status === 'PUBLICADO' && (
             <a className="botao botao-primario" href={tcc.linkLume} target="_blank" rel="noreferrer"><Icone nome="baixar" /> Acessar texto no LUME</a>
           )}
-          <a className="botao botao-contorno" href={tcc.linkLume} target="_blank" rel="noreferrer"><Icone nome="link" /> Ver no LUME</a>
+          {tcc.status === 'PUBLICADO' && <a className="botao botao-contorno" href={tcc.linkLume} target="_blank" rel="noreferrer"><Icone nome="link" /> Ver no LUME</a>}
           <span className="meta-icone suave"><Icone nome="olho" tamanho={16} /> {tcc.visualizacoes} visualizações</span>
           {ehAutor && <a className="link-acao" href={`#/editar/${tcc.id}`}><Icone nome="editar" tamanho={15} /> Editar</a>}
+          <BotaoExcluir tcc={tcc} depois={ehAutor ? '/perfil' : '/'} />
         </div>
         {download === 'erro' && (
           <div className="alerta-erro" role="alert">
@@ -92,7 +96,7 @@ export default function Detalhe({ id }) {
 
       <section className="leitura-corpo">
         <h2>Resumo</h2>
-        <p className="resumo-longo">{tcc.resumo}</p>
+        <p className="resumo-longo">{tcc.resumo || <span className="suave">Resumo ainda não preenchido.</span>}</p>
 
         {tcc.midias.length > 0 && (
           <>

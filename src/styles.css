@@ -40,6 +40,10 @@ h1, h2, h3 { color: var(--tinta); line-height: 1.2; margin: 0; }
 .botao:disabled { opacity: .7; cursor: progress; }
 .botao-primario { background: var(--acento); color: white; }
 .botao-primario:hover { background: var(--acento-escuro); }
+.botao-perigo { background: var(--erro); color: white; }
+.botao-perigo:hover { background: #b91c1c; }
+.botao-secundario { background: var(--fundo-alt); color: var(--texto); border: 1px solid var(--linha); }
+.botao-secundario:hover { border-color: var(--suave); }
 .botao-contorno { background: white; border-color: var(--linha); color: var(--tinta); }
 .botao-contorno:hover { border-color: var(--tinta); }
 .botao-pequeno { padding: 7px 14px; font-size: 13px; }
@@ -49,6 +53,7 @@ h1, h2, h3 { color: var(--tinta); line-height: 1.2; margin: 0; }
 .botao-icone:hover { background: var(--fundo-alt); color: var(--tinta); }
 .link-acao { background: none; border: none; padding: 0; color: var(--acento-escuro); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
 .link-acao:hover { text-decoration: underline; }
+.link-acao.link-perigo { color: var(--erro); }
 .link-acao.centro { display: block; margin: 16px auto 0; }
 
 /* ---------- Cabeçalho ---------- */
@@ -326,6 +331,8 @@ figcaption { font-size: 13px; color: var(--suave); margin-top: 6px; }
   .linha-tcc .meta-icone { display: none; }
   .contas-demo { grid-template-columns: 1fr; }
   .entrar-cartao { padding: 24px 20px; }
-  .form-acoes { bottom: 56px; }
+  .form-acoes { bottom: 56px; display: grid; grid-template-columns: 1fr 1fr; }
+  .form-acoes > :first-child { grid-column: 1 / -1; order: 3; }
+  .form-acoes .botao { justify-content: center; padding-left: 10px; padding-right: 10px; }
   .perfil-cabecalho .botao { margin-left: 0; width: 100%; }
 }

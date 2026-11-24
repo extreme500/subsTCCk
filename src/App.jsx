@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { carregar, salvar, estadoInicial, useRota, ir } from './lib.js'
+import { carregar, salvar, estadoInicial, useRota, ir, excluirTcc } from './lib.js'
 import { Icone } from './components/ui.jsx'
 import { Avatar } from './components/Art.jsx'
 import Feed from './views/Feed.jsx'
@@ -32,6 +32,7 @@ export default function App() {
       ...e,
       tccs: e.tccs.some((t) => t.id === tcc.id) ? e.tccs.map((t) => (t.id === tcc.id ? tcc : t)) : [tcc, ...e.tccs],
     })),
+    excluir: (id) => setEstado((e) => ({ ...e, tccs: excluirTcc(e.tccs, id, e.usuario) })),
     registrarVisualizacao: (id) => setEstado((e) => ({
       ...e, tccs: e.tccs.map((t) => (t.id === id ? { ...t, visualizacoes: t.visualizacoes + 1 } : t)),
     })),
@@ -157,6 +158,10 @@ const ROTEIRO = [
   ['CT04', 'No cadastro, tentar uma 6ª tag e uma 4ª imagem; deixar o Resumo vazio e publicar'],
   ['CT05', 'Buscar "blockchain" com a tag Redes → mensagem de nenhum resultado'],
   ['CT06', 'Ligar "Simular falha no download" → abrir um TCC → Baixar Artigo'],
+  ['CT51', 'No cadastro, preencher só o título → "Salvar como rascunho"'],
+  ['CT52', 'Editar um TCC publicado com um link inválido → a versão publicada continua no ar'],
+  ['CT53', 'Como aluno, abrir um TCC próprio → Excluir → o TCC some do perfil e do feed'],
+  ['CT54', 'Como aluno, publicar com o orientador Carlos Lima; entrar como professor → Excluir → volta a rascunho do aluno'],
 ]
 
 function PainelDemo() {

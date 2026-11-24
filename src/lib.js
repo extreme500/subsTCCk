@@ -1,6 +1,6 @@
 // Regras de negócio do protótipo (equivalem ao TccService / ValidadorLumeService do diagrama de classes).
 import { useEffect, useState } from 'react'
-import { TCCS_INICIAIS, LIMITE_TAGS } from './data.js'
+import { TCCS_INICIAIS, LIMITE_TAGS, LIMITE_TITULO, LIMITE_RESUMO } from './data.js'
 
 const CHAVE = 'substcck:v1'
 
@@ -44,24 +44,35 @@ export const ir = (destino) => { window.location.hash = destino }
 export const normalizar = (s) =>
   (s || '').toString().normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
 
+// O termo casa o início de uma palavra (decisão do grupo, Tabela 22): "rede" encontra "redes",
+// mas "IA" não encontra "anomalias". Funciona também para trechos com várias palavras.
+export function casaInicioDePalavra(texto, termo) {
+  const t = normalizar(termo)
+  if (!t) return true
+  const escapado = t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return new RegExp(`(^|[^a-z0-9])${escapado}`).test(normalizar(texto))
+}
+
+// O filtro Orientador encontra o professor como orientador ou como coorientador (Tabela 11, L22).
+export const orientaOuCoorienta = (t, professor) => t.orientador === professor || t.coorientador === professor
+
 // Todos os filtros são aplicados simultaneamente (E lógico). Rascunhos nunca aparecem.
 export function buscar(tccs, f) {
-  const termo = normalizar(f.termo)
   return tccs
     .filter((t) => t.status === 'PUBLICADO')
     .filter((t) => !f.ano || t.ano === Number(f.ano))
     .filter((t) => !f.autor || normalizar(t.autor).includes(normalizar(f.autor)))
-    .filter((t) => !f.orientador || t.orientador === f.orientador)
+    .filter((t) => !f.orientador || orientaOuCoorienta(t, f.orientador))
     .filter((t) => !f.colecao || t.colecao === f.colecao)
     .filter((t) => (f.tags || []).every((tag) => t.tags.includes(tag)))
-    .filter((t) => !termo || normalizar(
-      [t.titulo, t.resumo, t.autor, t.orientador, t.coorientador, ...t.tags].join(' '),
-    ).includes(termo))
+    .filter((t) => casaInicioDePalavra(
+      [t.titulo, t.resumo, t.autor, t.orientador, t.coorientador, ...t.tags].join(' '), f.termo,
+    ))
     .sort(maisRecentePrimeiro)
 }
 
 export function maisRecentePrimeiro(a, b) {
-  return (b.ano * 10 + b.semestre) - (a.ano * 10 + a.semestre)
+  return ((b.ano || 0) * 10 + (b.semestre || 0)) - ((a.ano || 0) * 10 + (a.semestre || 0))
     || (b.publicadoEm || '').localeCompare(a.publicadoEm || '')
 }
 
@@ -95,14 +106,50 @@ export const LUME_REGEX = /^https?:\/\/(www\.)?lume\.ufrgs\.br\/handle\/10183\/\
 
 export function validarCamposObrigatorios(form) {
   const erros = {}
-  if (!form.titulo.trim()) erros.titulo = true
-  if (!form.resumo.trim()) erros.resumo = true
+  if (!form.titulo.trim() || form.titulo.length > LIMITE_TITULO) erros.titulo = true
+  if (!form.resumo.trim() || form.resumo.length > LIMITE_RESUMO) erros.resumo = true
   if (!form.anoSemestre) erros.anoSemestre = true
   if (!form.orientador) erros.orientador = true
   if (!form.linkLume.trim()) erros.linkLume = true
   if (form.tags.length === 0) erros.tags = true
   if (form.tags.length > LIMITE_TAGS) erros.tags = true
   return erros
+}
+
+// Botão "Salvar como rascunho": só o título é exigido (seção 2.2 da Entrega 2; CT51).
+export function validarRascunho(form) {
+  return !form.titulo.trim() || form.titulo.length > LIMITE_TITULO ? { titulo: true } : {}
+}
+
+// Limites de arquivo (Tabela 11, L14 e L15; CT50). Devolve a mensagem de erro ou null.
+export function verificarTamanho(bytes, limiteMb, rotulo) {
+  return bytes > limiteMb * 1024 * 1024 ? `${rotulo} excede o limite de ${limiteMb} MB.` : null
+}
+
+// O que fazer depois da validação do link (UC01 FA02 e UC02; CT02, CT20, CT45, CT52).
+// Um TCC já publicado nunca volta a rascunho por causa de uma edição: a versão publicada é mantida.
+export function decidirPublicacao(original, linkValido) {
+  if (linkValido) return 'PUBLICAR'
+  return original?.status === 'PUBLICADO' ? 'MANTER_PUBLICADO' : 'OFERECER_RASCUNHO'
+}
+
+// Excluir TCC (seção 2.2; CT53 e CT54).
+// O autor remove o próprio TCC; o orientador ou o coorientador devolve o TCC a rascunho do aluno.
+export function papelNaExclusao(tcc, usuario) {
+  if (!tcc || !usuario) return null
+  if (usuario.papel === 'ALUNO_FORMANDO' && tcc.autorId === usuario.cartao) return 'AUTOR'
+  if (usuario.papel === 'PROFESSOR' && tcc.status === 'PUBLICADO' && orientaOuCoorienta(tcc, usuario.nome)) return 'ORIENTADOR'
+  return null
+}
+
+export function excluirTcc(tccs, id, usuario) {
+  const tcc = tccs.find((t) => t.id === id)
+  const papel = papelNaExclusao(tcc, usuario)
+  if (papel === 'AUTOR') return tccs.filter((t) => t.id !== id)
+  if (papel === 'ORIENTADOR') {
+    return tccs.map((t) => (t.id === id ? { ...t, status: 'RASCUNHO', publicadoEm: null, devolvidoPor: usuario.nome } : t))
+  }
+  return tccs
 }
 
 // Simula a chamada ao LUME (ValidadorLumeService.validarIntegridadeLink).
@@ -160,5 +207,5 @@ export function baixarArquivo(blob, nome) {
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
-export const formatarSemestre = (t) => `${t.ano}/${t.semestre}`
+export const formatarSemestre = (t) => (t.ano ? `${t.ano}/${t.semestre}` : 'semestre não informado')
 export const novoId = () => Math.random().toString(36).slice(2, 9)

@@ -14,10 +14,29 @@ export const ORIENTADORES = [
 
 export const COLECOES = ['Ciência da Computação', 'Engenharia de Computação']
 
-export const SEMESTRES = ['2026/1', '2025/2', '2025/1', '2024/2', '2024/1', '2023/2', '2023/1']
+// Semestre letivo da UFRGS: o primeiro vai até julho; o segundo, de agosto a dezembro.
+export function semestreAtual(data = new Date()) {
+  return `${data.getFullYear()}/${data.getMonth() < 7 ? 1 : 2}`
+}
+
+// Lista do cadastro: de 2023/1 até o semestre atual, do mais recente para o mais antigo (L06 a L08; CT41).
+export function listarSemestres(atual = semestreAtual(), primeiro = '2023/1') {
+  const valor = (s) => { const [a, n] = s.split('/').map(Number); return a * 2 + (n - 1) }
+  const lista = []
+  for (let v = valor(atual); v >= valor(primeiro); v--) lista.push(`${Math.floor(v / 2)}/${(v % 2) + 1}`)
+  return lista
+}
+
+export const SEMESTRES = listarSemestres()
 
 export const LIMITE_TAGS = 5
 export const LIMITE_MIDIAS = 3
+// Limites de tamanho decididos pelo grupo (Tabela 11, L04, L05, L12, L14 e L15).
+export const LIMITE_TITULO = 200
+export const LIMITE_RESUMO = 1500
+export const LIMITE_NOME_TAG = 30
+export const LIMITE_ARQUIVO_MB = 20
+export const LIMITE_IMAGEM_MB = 5
 
 export const CONTAS_DEMO = [
   {

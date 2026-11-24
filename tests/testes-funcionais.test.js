@@ -1,12 +1,19 @@
 // Testes funcionais (classes de equivalência e valor limite) executados contra a lógica do protótipo
 // (src/lib.js e src/data.js). Os IDs CV/CI e CT seguem a seção 7 do relatório da Etapa 2.
-// Os testes marcados como "todo" registram onde o protótipo ainda diverge das decisões do grupo:
-// eles rodam e aparecem no relatório do node --test, mas não reprovam a suíte.
+// Na Etapa 2, dois testes ficaram como "todo" (divergências do protótipo). Na Etapa 3 o protótipo
+// foi ajustado (lista de semestres e termo pelo início da palavra) e as regras da seção 2.2
+// (rascunho, edição, exclusão e limites de tamanho) ganharam testes próprios (CT49 a CT54).
 // Executar na raiz do repositório: node --test tests/
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buscar, estadoInicial, validarCamposObrigatorios, validarIntegridadeLink, formatoDoArquivo, LUME_REGEX } from '../src/lib.js';
-import { SEMESTRES, LIMITE_TAGS, LIMITE_MIDIAS } from '../src/data.js';
+import {
+  buscar, estadoInicial, validarCamposObrigatorios, validarRascunho, validarIntegridadeLink, formatoDoArquivo, LUME_REGEX,
+  decidirPublicacao, verificarTamanho, papelNaExclusao, excluirTcc, casaInicioDePalavra,
+} from '../src/lib.js';
+import {
+  SEMESTRES, LIMITE_TAGS, LIMITE_MIDIAS, LIMITE_TITULO, LIMITE_RESUMO, LIMITE_NOME_TAG, LIMITE_ARQUIVO_MB, LIMITE_IMAGEM_MB,
+  listarSemestres, semestreAtual,
+} from '../src/data.js';
 
 const tccs = estadoInicial().tccs;
 const ids = (filtro) => buscar(tccs, filtro).map((t) => t.id).sort();
@@ -78,12 +85,17 @@ describe('UC01 Cadastrar TCC: valores limite', () => {
     assert.equal(errosCom({ anoSemestre: SEMESTRES.at(-1) }).anoSemestre, undefined);
     assert.equal(errosCom({ anoSemestre: SEMESTRES[0] }).anoSemestre, undefined);
   });
-  test('CT41 (CI29): nenhum semestre posterior ao atual (2026/2) pode ser escolhido', () => {
-    const posteriores = SEMESTRES.filter((s) => { const [a, sem] = s.split('/').map(Number); return a * 10 + sem > 2026 * 10 + 2; });
-    assert.deepEqual(posteriores, []);
+  test('CT41 (CI29 e valor limite): com o semestre atual 2026/2, a lista vai de 2023/1 a 2026/2', () => {
+    const lista = listarSemestres('2026/2');
+    assert.equal(lista[0], '2026/2', 'o semestre atual pode ser escolhido');
+    assert.equal(lista.at(-1), '2023/1');
+    assert.ok(!lista.includes('2027/1'), 'o semestre seguinte não aparece');
+    assert.equal(lista.length, 8);
   });
-  test('CT41 (valor limite): o semestre atual (2026/2) deveria estar na lista', { todo: 'divergência: a lista do protótipo termina em 2026/1' }, () => {
-    assert.ok(SEMESTRES.includes('2026/2'));
+  test('CT41: o semestre atual depende da data (julho fecha o 1º semestre; agosto abre o 2º)', () => {
+    assert.equal(semestreAtual(new Date(2026, 6, 31)), '2026/1');
+    assert.equal(semestreAtual(new Date(2026, 7, 1)), '2026/2');
+    assert.equal(SEMESTRES[0], semestreAtual());
   });
 });
 
@@ -102,7 +114,7 @@ describe('UC04 Buscar e Filtrar TCCs: classes de equivalência', () => {
     const casos = [
       [{ ano: 2024 }, (t) => t.ano === 2024],
       [{ autor: 'Castro' }, (t) => sem(t.autor).includes('castro')],
-      [{ orientador: 'Profª Ana Reis' }, (t) => t.orientador === 'Profª Ana Reis'],
+      [{ orientador: 'Profª Ana Reis' }, (t) => t.orientador === 'Profª Ana Reis' || t.coorientador === 'Profª Ana Reis'],
       [{ colecao: 'Ciência da Computação' }, (t) => t.colecao === 'Ciência da Computação'],
       [{ tags: ['Segurança'] }, (t) => t.tags.includes('Segurança')],
       [{ termo: 'redes' }, (t) => sem([t.titulo, t.resumo, t.autor, t.orientador, t.coorientador, ...t.tags].join(' ')).includes('redes')],
@@ -143,9 +155,9 @@ describe('UC04 Buscar e Filtrar TCCs: classes de equivalência', () => {
     assert.deepEqual(ids({ tags: ['Redes', 'Robótica'] }), []);
   });
   test('CT30 (CI19): critérios que têm resultado sozinhos, mas sem interseção', () => {
-    assert.ok(ids({ orientador: 'Profª Ana Reis' }).length > 0);
+    assert.ok(ids({ orientador: 'Profª Juliana Prates' }).length > 0);
     assert.ok(ids({ tags: ['IA'] }).length > 0);
-    assert.deepEqual(ids({ orientador: 'Profª Ana Reis', tags: ['IA'] }), []);
+    assert.deepEqual(ids({ orientador: 'Profª Juliana Prates', tags: ['IA'] }), []);
   });
   test('CT31 (CV43, CI27): filtro de coleção (curso)', () => {
     assert.deepEqual(ids({ colecao: 'Engenharia de Computação' }), ['b', 'd', 'k']);
@@ -163,9 +175,16 @@ describe('UC04 Buscar e Filtrar TCCs: classes de equivalência', () => {
   test('CT33 (CV41): termo casa o início de uma palavra ("rede" encontra "redes")', () => {
     assert.ok(ids({ termo: 'rede' }).length > 0);
   });
-  test('CT33 (CI26): termo no meio de uma palavra não deveria casar ("IA" não encontra "anomalias")', { todo: 'divergência: o protótipo casa qualquer trecho' }, () => {
+  test('CT33 (CI26): termo no meio de uma palavra não casa ("IA" não encontra "anomalias")', () => {
     const comTagIa = tccs.filter((t) => t.status === 'PUBLICADO' && t.tags.includes('IA')).map((t) => t.id).sort();
     assert.deepEqual(ids({ termo: 'IA' }), comTagIa);
+    assert.equal(casaInicioDePalavra('Detecção de anomalias', 'ia'), false);
+    assert.equal(casaInicioDePalavra('Detecção de anomalias', 'anomalia'), true);
+    assert.equal(casaInicioDePalavra('Detecção de anomalias em redes veiculares', 'anomalias em redes'), true);
+  });
+  test('L22: o filtro Orientador também encontra o professor como coorientador', () => {
+    assert.ok(ids({ orientador: 'Profª Ana Reis' }).includes('c'), 'Ana Reis coorienta o TCC C');
+    assert.deepEqual(ids({ ano: 2025, orientador: 'Prof. Carlos Lima', tags: ['Redes'] }), ['a'], 'o CT03 continua valendo');
   });
 });
 
@@ -181,5 +200,61 @@ describe('UC04 Buscar e Filtrar TCCs: valores limite', () => {
     assert.equal(ids({ termo: 'astronomia' }).length, 0); // "blockchain" existe no TCC H desta base
     assert.equal(ids({ termo: 'Castro' }).length, 1);
     assert.equal(ids({ termo: 'Juliana' }).length, 2);
+  });
+});
+
+describe('Regras da seção 2.2 e limites de tamanho (CT49 a CT54)', () => {
+  const aluna = { cartao: '00312345', papel: 'ALUNO_FORMANDO', nome: 'Marina Souza' };
+  const carlos = { cartao: '00012345', papel: 'PROFESSOR', nome: 'Prof. Carlos Lima' };
+  const ana = { cartao: '00099999', papel: 'PROFESSOR', nome: 'Profª Ana Reis' };
+  const daAluna = { ...tccs[0], id: 'm', autor: 'Marina Souza', autorId: '00312345', orientador: 'Prof. Carlos Lima', coorientador: '' };
+  const base = [...tccs, daAluna];
+
+  test('CT49: título com 200 e 201 caracteres; resumo com 1.500 e 1.501', () => {
+    assert.equal(LIMITE_TITULO, 200);
+    assert.equal(LIMITE_RESUMO, 1500);
+    assert.equal(errosCom({ titulo: 'x'.repeat(200) }).titulo, undefined);
+    assert.equal(errosCom({ titulo: 'x'.repeat(201) }).titulo, true);
+    assert.equal(errosCom({ resumo: 'x'.repeat(1500) }).resumo, undefined);
+    assert.equal(errosCom({ resumo: 'x'.repeat(1501) }).resumo, true);
+    assert.equal(LIMITE_NOME_TAG, 30);
+  });
+  test('CT50: arquivo do trabalho até 20 MB e imagem até 5 MB', () => {
+    const MB = 1024 * 1024;
+    assert.equal(verificarTamanho(LIMITE_ARQUIVO_MB * MB, LIMITE_ARQUIVO_MB, 'O arquivo'), null);
+    assert.match(verificarTamanho(LIMITE_ARQUIVO_MB * MB + 1, LIMITE_ARQUIVO_MB, 'O arquivo'), /20 MB/);
+    assert.equal(verificarTamanho(LIMITE_IMAGEM_MB * MB, LIMITE_IMAGEM_MB, 'A imagem'), null);
+    assert.match(verificarTamanho(LIMITE_IMAGEM_MB * MB + 1, LIMITE_IMAGEM_MB, 'A imagem'), /5 MB/);
+  });
+  test('CT51: "Salvar como rascunho" exige só o título', () => {
+    const soTitulo = { titulo: 'Meu TCC', resumo: '', anoSemestre: '', orientador: '', linkLume: '', tags: [] };
+    assert.deepEqual(validarRascunho(soTitulo), {});
+    assert.deepEqual(validarRascunho({ ...soTitulo, titulo: '   ' }), { titulo: true });
+    assert.ok(Object.keys(validarCamposObrigatorios(soTitulo)).length > 1, 'para publicar, os outros campos continuam obrigatórios');
+  });
+  test('CT02, CT45 e CT52: o que acontece depois da validação do link', () => {
+    assert.equal(decidirPublicacao(null, true), 'PUBLICAR');
+    assert.equal(decidirPublicacao(null, false), 'OFERECER_RASCUNHO', 'cadastro novo: FA02');
+    assert.equal(decidirPublicacao({ status: 'RASCUNHO' }, true), 'PUBLICAR', 'CT45: rascunho com link corrigido');
+    assert.equal(decidirPublicacao({ status: 'PUBLICADO' }, false), 'MANTER_PUBLICADO', 'CT52: a edição não despublica');
+  });
+  test('CT53: o autor exclui o próprio TCC, que some da base', () => {
+    assert.equal(papelNaExclusao(daAluna, aluna), 'AUTOR');
+    const depois = excluirTcc(base, 'm', aluna);
+    assert.ok(!depois.some((t) => t.id === 'm'));
+    assert.ok(!buscar(depois, {}).some((t) => t.id === 'm'));
+  });
+  test('CT54: o orientador devolve o TCC a rascunho; outro professor não pode excluir', () => {
+    assert.equal(papelNaExclusao(daAluna, ana), null, 'Ana Reis não orienta este TCC');
+    assert.deepEqual(excluirTcc(base, 'm', ana), base);
+    assert.equal(papelNaExclusao(daAluna, carlos), 'ORIENTADOR');
+    const depois = excluirTcc(base, 'm', carlos);
+    const tcc = depois.find((t) => t.id === 'm');
+    assert.equal(tcc.status, 'RASCUNHO');
+    assert.equal(tcc.devolvidoPor, 'Prof. Carlos Lima');
+    assert.ok(!buscar(depois, {}).some((t) => t.id === 'm'), 'sai do feed e da busca');
+    assert.equal(papelNaExclusao(tccs.find((t) => t.id === 'c'), ana), 'ORIENTADOR', 'a coorientadora também pode');
+    assert.equal(papelNaExclusao(daAluna, null), null, 'visitante não exclui');
+    assert.equal(papelNaExclusao(tccs[0], aluna), null, 'aluno não exclui TCC de outro autor');
   });
 });

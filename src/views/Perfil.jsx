@@ -1,8 +1,9 @@
 // Perfil: "Meus TCCs" (aluno formando, com status) ou "Trabalhos orientados" (professor).
 import { useApp } from '../App.jsx'
-import { formatarSemestre, maisRecentePrimeiro } from '../lib.js'
+import { formatarSemestre, maisRecentePrimeiro, orientaOuCoorienta } from '../lib.js'
 import { Avatar, Capa } from '../components/Art.jsx'
 import { Icone, Vazio } from '../components/ui.jsx'
+import BotaoExcluir from '../components/Excluir.jsx'
 
 export default function Perfil() {
   const { estado } = useApp()
@@ -16,7 +17,7 @@ export default function Perfil() {
   }
   const ehAluno = u.papel === 'ALUNO_FORMANDO'
   const lista = estado.tccs
-    .filter((t) => (ehAluno ? t.autorId === u.cartao : (t.orientador === u.nome || t.coorientador === u.nome) && t.status === 'PUBLICADO'))
+    .filter((t) => (ehAluno ? t.autorId === u.cartao : orientaOuCoorienta(t, u.nome) && t.status === 'PUBLICADO'))
     .sort(maisRecentePrimeiro)
   const totalVis = lista.reduce((s, t) => s + t.visualizacoes, 0)
 
@@ -49,11 +50,12 @@ export default function Perfil() {
               <Capa tcc={t} className="capa-linha" />
               <div className="linha-tcc-texto">
                 <a href={`#/tcc/${t.id}`}><strong>{t.titulo}</strong></a>
-                <span className="suave pequeno">{ehAluno ? t.orientador : t.autor} · {formatarSemestre(t)} · {t.tags.join(', ')}</span>
+                <span className="suave pequeno">{ehAluno ? (t.orientador || 'Orientador não informado') : t.autor} · {formatarSemestre(t)}{t.tags.length > 0 && ` · ${t.tags.join(', ')}`}</span>
               </div>
-              <span className={`status status-${t.status.toLowerCase()}`}>{t.status === 'PUBLICADO' ? 'Publicado' : 'Rascunho'}</span>
+              <span className={`status status-${t.status.toLowerCase()}`} title={t.devolvidoPor ? `Devolvido por ${t.devolvidoPor}` : undefined}>{t.status === 'PUBLICADO' ? 'Publicado' : t.devolvidoPor ? 'Rascunho (devolvido)' : 'Rascunho'}</span>
               <span className="meta-icone suave"><Icone nome="olho" tamanho={15} /> {t.visualizacoes}</span>
               {ehAluno && <a className="botao-icone" href={`#/editar/${t.id}`} title="Editar" aria-label="Editar"><Icone nome="editar" /></a>}
+              <BotaoExcluir tcc={t} compacto depois="/perfil" />
             </div>
           ))}
         </div>
