@@ -1,0 +1,13 @@
+<section id="arquitetura" class="alt">
+<p class="eyebrow">ARQUITETURA E DESIGN</p>
+<h2>Monólito em camadas atrás de uma API REST</h2>
+<div style="display:grid; grid-template-columns:1040px 1fr; gap:56px; margin-top:36px; align-items:start">
+<img class="figura entra" style="--i:0; width:1040px; height:624px; object-fit:contain" src="/_blob/b16b1e3a676630e523e69cb041a78b51" alt="Arquitetura: navegador com a SPA React chama por HTTPS o servidor com as camadas controller, service, repository, model e dto; o servidor usa o login da UFRGS, o LUME, o armazenamento de arquivos e o banco relacional">
+<div class="entra" style="--i:1; display:flex; flex-direction:column; gap:28px">
+<p class="corpo"><b>Camadas do diagrama de pacotes:</b> controller → service → repository → model; nenhuma chama a de cima.</p>
+<p class="corpo"><b>LUME, login e arquivos atrás de interfaces:</b> os testes simulam o LUME fora do ar (CT02) e a queda no meio do download (CT06).</p>
+<p class="corpo"><b>Decisões ligadas aos requisitos:</b> download tudo ou nada (FA02); busca em campos normalizados, pelo início da palavra.</p>
+</div>
+</div>
+<aside>A arquitetura é pequena de propósito: escopo pequeno, equipe de três pessoas. O protótipo é o cliente dessa arquitetura, ainda sem servidor. As interfaces para os sistemas externos existem para que os casos de teste de falha possam ser executados. Microsserviços foram descartados por custo sem ganho neste escopo.</aside>
+</section>

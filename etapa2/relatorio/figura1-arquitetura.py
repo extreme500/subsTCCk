@@ -31,7 +31,7 @@ box(40,140,330,300,'Navegador',['SPA React (protótipo)','Telas: Feed, Busca,','
 # servidor
 d.rounded_rectangle([470,60,1250,1020],radius=14,fill=SRV,outline=INK,width=3)
 d.text((860,78),'Servidor de aplicação (monólito em camadas)',font=fb(26),fill=INK,anchor='mt')
-box(520,140,680,150,'controller',['TccController (API REST: buscar, detalhar,','baixar, cadastrar, editar)'],fill=LAY)
+box(520,140,680,150,'controller',['TccController (API REST: buscar, detalhar,','baixar, cadastrar, editar, excluir)'],fill=LAY)
 box(520,350,680,170,'service',['TccService (regras de busca, rascunho/publicação,','limites de tags e mídias) · ValidadorLumeService','ArmazenamentoArquivos (interface)'],fill=LAY)
 box(520,580,680,140,'repository',['TccRepository · TagRepository','(interfaces; consultas normalizadas)'],fill=LAY)
 box(520,780,320,190,'model',['TCC, Usuario, Professor,','AlunoFormando, Tag, Area,','Midia, ArquivoTcc,','StatusTcc'],fill=(255,255,255),lsize=19)

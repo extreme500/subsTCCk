@@ -69,7 +69,7 @@ A pasta `etapa2/` contém o experimento de Spec-Driven Development aplicado ao R
 | `etapa2/claude-code/`, `etapa2/antigravity/` | Saída de cada ferramenta: spec, plano, tarefas, análise, código e testes |
 | `etapa2/oraculo/` | 17 testes independentes, rodados nas duas implementações |
 | `etapa2/testes-funcionais/` | Experimento de classes de equivalência e valor limite (pacote, prompts e saídas das duas ferramentas) |
-| `tests/` | 31 testes funcionais automáticos da lógica do protótipo (`npm test`) |
+| `tests/` | 38 testes funcionais automáticos da lógica do protótipo (`npm test`) |
 
 Requer Node.js 20 ou superior, sem `npm install`:
 
@@ -79,3 +79,15 @@ cd etapa2/antigravity && node --test          # 12 testes
 cd etapa2 && IMPL=claude node --test oraculo/       # 16 de 17
 cd etapa2 && IMPL=antigravity node --test oraculo/  # 13 de 17
 ```
+
+## Etapa 3: consolidação
+
+A pasta `etapa3/` reúne a entrega final:
+
+| Pasta | Conteúdo |
+|---|---|
+| `etapa3/relatorio/` | Relatório técnico final (.docx e uma prévia em PDF), gerado por `gerar-relatorio-final.cjs` a partir de `corpo.cjs` (o corpo, de 5 a 8 páginas) e `anexos.cjs` (a especificação consolidada e os registros) |
+| `etapa3/figuras/` | Diagramas UML redesenhados após o parecer (casos de uso, classes, pacotes, sequência do UC01, atividades do UC01 e do UC04) e a figura de arquitetura, com os scripts Python que os desenham |
+| `etapa3/apresentacao/` | Fontes dos slides da apresentação final |
+
+Na Etapa 3, o protótipo passou a aplicar as decisões do grupo: botão "Salvar como rascunho" (exige só o título), edição de TCC publicado que não despublica quando o link falha, exclusão pelo autor e pelo orientador ou coorientador (o TCC volta a rascunho do aluno), limites de tamanho, lista de semestres até o semestre atual, busca pelo início da palavra e filtro Orientador que inclui o coorientador. Os 38 testes de `tests/` cobrem essas regras (CT33, CT41 e CT49 a CT54).
