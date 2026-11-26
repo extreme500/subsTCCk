@@ -1,4 +1,4 @@
-// Gera o relatório técnico final (Etapa 3): corpo de 5 a 8 páginas + anexos com a especificação
+// Gera o relatório técnico final (Etapa 3): corpo com os itens da seção 11 do enunciado + anexos com a especificação
 // consolidada (Etapa 1 com os ajustes do parecer) e os registros da Etapa 2.
 // Uso: node gerar-relatorio-final.cjs <saida.docx>
 // (o pacote "docx" precisa estar acessível: NODE_PATH=<pasta com node_modules/docx>)

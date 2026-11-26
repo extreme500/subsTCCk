@@ -1,0 +1,22 @@
+<section id="experimento">
+<p class="eyebrow">UM EXPERIMENTO CONCRETO</p>
+<h2>Ampliar os testes com dois prompts</h2>
+<div class="linha3">
+<div class="cartao entra" style="--i:0">
+<p class="tag">1 · ARTEFATO DO GRUPO</p>
+<p class="corpo">Os casos CT01 a CT06 da Etapa 1, com o UC01 e o UC04. O CT04 já testava 5 e 6 tags e 3 e 4 imagens, mas misturava limites com um campo vazio.</p>
+</div>
+<div class="cartao entra" style="--i:1">
+<p class="tag">2 · PROMPT REFINADO (TRECHO)</p>
+<p class="corpo">“Cada caso inválido cobre uma única classe inválida.”</p>
+<p class="corpo">“Quando o relatório não define a regra de uma entrada, NÃO invente: registre a entrada na seção 6.”</p>
+</div>
+<div class="cartao entra" style="--i:2">
+<p class="tag">3 · RESULTADO</p>
+<p class="corpo"><b>Claude:</b> 24 casos e 25 lacunas, como o tamanho máximo do título; o grupo decidiu 200 caracteres (CT49).</p>
+<p class="corpo"><b>Gemini:</b> com o prompt simples, inventou uma base de teste; com o refinado, a corrigiu.</p>
+</div>
+</div>
+<p class="corpo entra" style="--i:3; margin-top:36px">As mesmas entradas e os mesmos prompts foram dados às duas ferramentas; o grupo decidiu as lacunas e conferiu cada caso.</p>
+<aside>Este é o exemplo concreto pedido: artefato produzido pela equipe, interação com a IA e resultado. O prompt 1 só pedia para ampliar os casos com classes de equivalência e valor limite. O prompt 2 fixou a estrutura, o critério de cobertura e proibiu inventar regras. Com o prompt simples, o Gemini criou uma base que contradizia a tabela do CT03, por exemplo o TCC D em 2025/2, e errou resultados a partir dela. Com o refinado, as duas ferramentas chegaram a estruturas parecidas; o Claude foi mais completo, e o Gemini trouxe a classe "semestre posterior ao atual", que entrou como CI29 e CT41. Os prompts completos estão no Anexo G do relatório.</aside>
+</section>

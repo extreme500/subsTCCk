@@ -1,20 +1,28 @@
 <section id="testes" class="escuro">
-<p class="eyebrow">TESTES</p>
-<h2>Dos 6 casos da Etapa 1 a 54, todos executados</h2>
-<div class="linha3">
-<div class="cartao entra" style="--i:0">
-<p class="numero">54</p>
-<p class="rotulo">casos de teste (CT01 a CT54), com classes de equivalência e valor limite, uma classe inválida por caso</p>
+<p class="eyebrow">TESTES DERIVADOS DOS REQUISITOS</p>
+<h2>Do requisito ao caso de teste</h2>
+<div class="fluxo entra" style="--i:0">
+<p class="etapa">RF#01 e UC01<br>"de 1 a 5 tags"</p>
+<p style="font-size:44px; color:#F6A26B">→</p>
+<p class="etapa">Classes<br>CV09 1 a 5 · CI09 nenhuma · CI10 mais de 5</p>
+<p style="font-size:44px; color:#F6A26B">→</p>
+<p class="etapa">Valores limite<br>0 · 1 · 5 · 6 tags</p>
+<p style="font-size:44px; color:#F6A26B">→</p>
+<p class="etapa forte">Casos<br>CT15 · CT07 · CT10 · CT16</p>
 </div>
+<div class="linha3" style="margin-top:56px">
 <div class="cartao entra" style="--i:1">
-<p class="numero">38</p>
-<p class="rotulo">testes automáticos rodando contra o código do protótipo, todos passando</p>
+<p class="numero" style="font-size:96px">54</p>
+<p class="rotulo">casos de teste (CT01 a CT54), uma classe inválida por caso</p>
 </div>
 <div class="cartao entra" style="--i:2">
-<p class="numero">2</p>
-<p class="rotulo">falhas do protótipo achadas pelos critérios e corrigidas: o semestre atual fora da lista e "IA" encontrando "anomalias"</p>
+<p class="numero" style="font-size:96px">38</p>
+<p class="rotulo">testes automáticos contra o código do protótipo, todos passando</p>
+</div>
+<div class="cartao entra" style="--i:3">
+<p class="numero" style="font-size:96px">2</p>
+<p class="rotulo">falhas do protótipo achadas pelos critérios e corrigidas</p>
 </div>
 </div>
-<p class="corpo entra" style="--i:3; margin-top:40px">Os casos de interface foram executados no navegador. Só o CT20 não é verificável: depende do LUME de verdade.</p>
-<aside>Os testes vêm dos requisitos e critérios de aceitação. O parecer pediu classes de equivalência, valor limite, fluxos alternativos, filtros e controle de acesso, e separar o CT04; tudo está coberto. O valor limite do semestre mostrou que quem defende em 2026/2 não conseguia cadastrar. A classe CI26 mostrou que "IA" trazia trabalhos sobre "anomalias". As duas foram corrigidas no protótipo.</aside>
+<aside>Cada regra do requisito e do caso de uso vira uma condição de entrada; cada condição vira classes válidas e inválidas; cada limite vira valores para testar; e cada classe e valor vira pelo menos um caso de teste. O exemplo é a regra das tags do RF#01. Os mesmos critérios acharam duas falhas no protótipo: quem defende no semestre atual (2026/2) não conseguia cadastrar, e "IA" trazia trabalhos sobre "anomalias". As duas foram corrigidas. Os casos de interface foram executados no navegador; só o CT20 depende do LUME real.</aside>
 </section>

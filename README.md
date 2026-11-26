@@ -86,7 +86,7 @@ A pasta `etapa3/` reúne a entrega final:
 
 | Pasta | Conteúdo |
 |---|---|
-| `etapa3/relatorio/` | Relatório técnico final (.docx e uma prévia em PDF), gerado por `gerar-relatorio-final.cjs` a partir de `corpo.cjs` (o corpo, de 5 a 8 páginas) e `anexos.cjs` (a especificação consolidada e os registros) |
+| `etapa3/relatorio/` | Relatório técnico final (.docx e uma prévia em PDF), gerado por `gerar-relatorio-final.cjs` a partir de `corpo.cjs` (o corpo, com os itens da seção 11 do enunciado) e `anexos.cjs` (a especificação consolidada e os registros) |
 | `etapa3/figuras/` | Diagramas UML redesenhados após o parecer (casos de uso, classes, pacotes, sequência do UC01, atividades do UC01 e do UC04) e a figura de arquitetura, com os scripts Python que os desenham |
 | `etapa3/apresentacao/` | Fontes dos slides da apresentação final |
 
