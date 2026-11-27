@@ -2,6 +2,7 @@
 // consolidada (Etapa 1 com os ajustes do parecer) e os registros da Etapa 2.
 // Uso: node gerar-relatorio-final.cjs <saida.docx>
 // (o pacote "docx" precisa estar acessível: NODE_PATH=<pasta com node_modules/docx>)
+// Depois de gerar, rode: python limpar-docx.py <saida.docx> (deixa o arquivo pronto para o Google Docs)
 const fs = require('fs');
 const path = require('path');
 const {
@@ -28,14 +29,14 @@ function runs(texto, base = {}) {
   const partes = ref(texto).split(/(\*\*[^*]+\*\*|`[^`]+`|\[GRUPO[^\]]*\])/g).filter((p) => p !== '');
   return partes.map((p) => {
     if (p.startsWith('**')) return new TextRun({ ...base, text: p.slice(2, -2), bold: true });
-    if (p.startsWith('`')) return new TextRun({ ...base, text: p.slice(1, -1), font: 'Consolas', size: (base.size || 24) - 4 });
-    if (p.startsWith('[GRUPO')) return new TextRun({ ...base, text: p, bold: true, shading: DESTAQUE });
+    if (p.startsWith('`')) return new TextRun({ ...base, text: p.slice(1, -1), font: 'Courier New', size: (base.size || 24) - 4 });
+    if (p.startsWith('[GRUPO')) return new TextRun({ ...base, text: p, bold: true, highlight: 'yellow' });
     return new TextRun({ ...base, text: p });
   });
 }
 const P = (texto, opts = {}) => new Paragraph({ alignment: AlignmentType.JUSTIFIED, spacing: { after: 100 }, indent: { firstLine: 567 }, ...opts, children: runs(texto) });
 const PS = (texto, opts = {}) => P(texto, { indent: undefined, ...opts });
-const H1 = (texto, quebra = false) => new Paragraph({ heading: HeadingLevel.HEADING_1, pageBreakBefore: quebra, children: [new TextRun(texto)] });
+const H1 = (texto, quebra = false) => new Paragraph({ heading: HeadingLevel.HEADING_1, children: quebra ? [new PageBreak(), new TextRun(texto)] : [new TextRun(texto)] });
 const H2 = (texto) => new Paragraph({ heading: HeadingLevel.HEADING_2, children: [new TextRun(texto)] });
 const LI = (texto) => new Paragraph({ numbering: { reference: 'marcadores', level: 0 }, alignment: AlignmentType.JUSTIFIED, spacing: { after: 40 }, children: runs(texto) });
 let listaNum = 0;
@@ -111,7 +112,7 @@ function FIG2(chave, arquivos, titulo, fonte = 'Fonte: protótipo do grupo.') {
   return [legenda(`Figura ${numerar('F', chave)} - ${titulo}`), new Paragraph({ alignment: AlignmentType.CENTER, keepNext: true, children: filhos }), FONTE(fonte)];
 }
 
-const blocoCodigo = (texto) => texto.split('\n').map((linha) => new Paragraph({ spacing: { after: 0, line: 240 }, children: [new TextRun({ text: linha === '' ? ' ' : linha, font: 'Consolas', size: 16 })] }));
+const blocoCodigo = (texto) => texto.split('\n').map((linha) => new Paragraph({ spacing: { after: 0, line: 240 }, children: [new TextRun({ text: linha === '' ? ' ' : linha, font: 'Courier New', size: 16 })] }));
 
 // Bloco de título no padrão do documento do grupo (logo, título e autores, professora).
 function cabecalhoTitulo() {
